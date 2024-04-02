@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface Spreadsheet {
   name: string;
@@ -19,6 +20,22 @@ const SpreadsheetSearch = () => {
   const [filteredSheets, setFilteredSheets] =
     useState<Spreadsheet[]>(dummySheets);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
+  /*useEffect(() => {
+    const fetchSheets = async () => {
+      try {
+        const response = await axios.get<Spreadsheet[]>(
+          "バックエンドAPIのエンドポイント"
+        );
+        setSheets(response.data);
+        setFilteredSheets(response.data);
+      } catch (error) {
+        console.error("エラーが発生しました:", error);
+      }
+    };
+    fetchSheets();
+  }, []);*/
 
   useEffect(() => {
     const result = sheets.filter((sheet) =>
@@ -27,11 +44,6 @@ const SpreadsheetSearch = () => {
     setFilteredSheets(result);
   }, [searchTerm, sheets]);
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedSheetId = e.target.value;
-    postSelectedSheetId(selectedSheetId);
-  };
-
   const postSelectedSheetId = async (sheetId: string) => {
     try {
       await axios.post("バックエンドAPIのエンドポイント", { id: sheetId });
@@ -39,6 +51,12 @@ const SpreadsheetSearch = () => {
     } catch (error) {
       console.error("エラーが発生しました:", error);
     }
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedSheetId = e.target.value;
+    postSelectedSheetId(selectedSheetId);
+    navigate("/spreadsheetPage");
   };
 
   return (

@@ -1,4 +1,6 @@
+import { Routes, Route } from "react-router-dom";
 import SpreadsheetSearch from "./components/SpreadsheetSearch";
+import SpreadsheetPage from "./components/SpreadsheetPage";
 import "./App.css";
 
 function App() {
@@ -8,7 +10,10 @@ function App() {
       <div>
         <p>生徒名を入力し、スプレッドシートを検索します。</p>
       </div>
-      <SpreadsheetSearch />
+      <Routes>
+        <Route path="/" element={<SpreadsheetSearch />} />
+        <Route path="/spreadsheetPage" element={<SpreadsheetPage />} />
+      </Routes>
     </>
   );
 }
