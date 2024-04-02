@@ -44,10 +44,13 @@ const SpreadsheetSearch = () => {
     setFilteredSheets(result);
   }, [searchTerm, sheets]);
 
-  const postSelectedSheetId = async (sheetId: string) => {
+  const fetchSpreadsheetById = async (sheetId: string) => {
     try {
-      await axios.post("バックエンドAPIのエンドポイント", { id: sheetId });
-      console.log("送信成功:", sheetId);
+      const response = await axios.get(
+        `バックエンドAPIのエンドポイント/${sheetId}`
+      );
+      console.log("取得成功:", response.data);
+      navigate(`/spreadsheetPage/${sheetId}`);
     } catch (error) {
       console.error("エラーが発生しました:", error);
     }
@@ -55,8 +58,7 @@ const SpreadsheetSearch = () => {
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSheetId = e.target.value;
-    postSelectedSheetId(selectedSheetId);
-    navigate("/spreadsheetPage");
+    fetchSpreadsheetById(selectedSheetId);
   };
 
   return (

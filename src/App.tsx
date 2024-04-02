@@ -1,3 +1,4 @@
+// App.tsx
 import { Routes, Route } from "react-router-dom";
 import SpreadsheetSearch from "./components/SpreadsheetSearch";
 import SpreadsheetPage from "./components/SpreadsheetPage";
@@ -12,7 +13,7 @@ function App() {
       </div>
       <Routes>
         <Route path="/" element={<SpreadsheetSearch />} />
-        <Route path="/spreadsheetPage" element={<SpreadsheetPage />} />
+        <Route path="/spreadsheetPage/:sheetId" element={<SpreadsheetPage />} />
       </Routes>
     </>
   );
