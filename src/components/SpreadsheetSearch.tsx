@@ -63,6 +63,8 @@ const SpreadsheetSearch = () => {
 
   return (
     <div>
+      <h1>報告書を作成</h1>
+      <p>生徒名を入力し、スプレッドシートを検索します。</p>
       <input
         type="text"
         placeholder="スプレッドシートを検索"
