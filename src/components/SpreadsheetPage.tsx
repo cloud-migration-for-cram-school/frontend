@@ -1,17 +1,25 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import "../styles/SpreadsheetPage.css";
 
 const SpreadsheetPage = () => {
-  const { sheetId } = useParams();
   const location = useLocation();
   const sheetData = location.state?.sheetData;
 
   return (
     <div>
       {sheetData ? (
-        <>
-          <h2>{sheetData.name}</h2>
-          {/* その他のスプレッドシートの情報を表示 */}
-        </>
+        <div className="spreadsheet-container">
+          <table>
+            <tbody>
+              <tr>
+                <th>Date and Time</th>
+                <td>{sheetData.basicInfo.dateAndTime}</td>
+                <th>Subject Name</th>
+                <td>{sheetData.basicInfo.subjectName}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       ) : (
         <p>スプレッドシートのデータがありません。</p>
       )}

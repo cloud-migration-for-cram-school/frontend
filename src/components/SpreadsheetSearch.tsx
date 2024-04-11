@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import dummySheetData from "../assets/dummySheetData";
+import dummySheets from "../assets/dummySheets";
 
 interface Spreadsheet {
   name: string;
@@ -8,14 +10,6 @@ interface Spreadsheet {
 }
 
 const SpreadsheetSearch = () => {
-  const dummySheets: Spreadsheet[] = [
-    { name: "スプレッドシート1", id: "1" },
-    { name: "プロジェクト計画", id: "2" },
-    { name: "予算管理表", id: "3" },
-    { name: "会議の議事録", id: "4" },
-    { name: "顧客リスト", id: "5" },
-  ];
-
   const [sheets, setSheets] = useState<Spreadsheet[]>(dummySheets);
   const [filteredSheets, setFilteredSheets] =
     useState<Spreadsheet[]>(dummySheets);
@@ -26,7 +20,7 @@ const SpreadsheetSearch = () => {
     const fetchSheets = async () => {
       try {
         const response = await axios.get<Spreadsheet[]>(
-          "バックエンドAPIのエンドポイント"
+          "/search"
         );
         setSheets(response.data);
         setFilteredSheets(response.data);
@@ -50,7 +44,10 @@ const SpreadsheetSearch = () => {
         `バックエンドAPIのエンドポイント/${sheetId}`
       );
       console.log("取得成功:", response.data);
-      navigate(`/spreadsheetPage/${sheetId}`);
+      response.data = dummySheetData;
+      navigate(`/${sheetId}`, {
+        state: { sheetData: response.data },
+      });
     } catch (error) {
       console.error("エラーが発生しました:", error);
     }
