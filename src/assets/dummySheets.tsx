@@ -1,14 +1,14 @@
 interface Spreadsheet {
-  name: string;
-  id: string;
+  label: string;
+  value: string;
 }
 
 const dummySheets: Spreadsheet[] = [
-  { name: "スプレッドシート1", id: "1" },
-  { name: "プロジェクト計画", id: "2" },
-  { name: "予算管理表", id: "3" },
-  { name: "会議の議事録", id: "4" },
-  { name: "顧客リスト", id: "5" },
+  { label: "スプレッドシート1", value: "1" },
+  { label: "プロジェクト計画", value: "2" },
+  { label: "予算管理表", value: "3" },
+  { label: "会議の議事録", value: "4" },
+  { label: "顧客リスト", value: "5" },
 ];
 
 export default dummySheets;
