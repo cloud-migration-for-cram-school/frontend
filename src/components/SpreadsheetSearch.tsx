@@ -5,21 +5,27 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { HStack, Autocomplete, FormControl, Button } from "@yamada-ui/react";
 import dummySheetData from "../assets/dummySheetData";
 import dummySheets from "../assets/dummySheets";
+import dummySubjectsA from "../assets/dummySubjectsA";
+import dummySubjectsB from "../assets/dummySubjectB";
 
 interface Spreadsheet {
   label: string;
   value: string;
 }
 
-type FormData = {
+interface Subject {
+  label: string;
+  value: string;
+}
+
+interface FormData {
   selectedSheetId: string;
-};
+  selectedSubjectId: string;
+}
 
 const SpreadsheetSearch = () => {
   const [sheets, setSheets] = useState<Spreadsheet[]>(dummySheets);
-  const [filteredSheets, setFilteredSheets] =
-    useState<Spreadsheet[]>(dummySheets);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const {
@@ -32,34 +38,42 @@ const SpreadsheetSearch = () => {
     const fetchSheets = async () => {
       try {
         const response = await axios.get<Spreadsheet[]>(
-          "/search"
+          "バックエンドAPIのエンドポイント/search"
         );
         setSheets(response.data);
-        setFilteredSheets(response.data);
       } catch (error) {
         console.error("エラーが発生しました:", error);
       }
     };
-    fetchSheets();
   }, []);*/
 
-  useEffect(() => {
-    const result = sheets.filter((sheet) =>
-      sheet.label.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredSheets(result);
-  }, [searchTerm, sheets]);
+  const fetchSubjectById = async (selectedSheetId: string) => {
+    try {
+      const response = await axios.get(
+        `バックエンドAPIのエンドポイント/search/subject/${selectedSheetId}`
+      );
+      console.log("取得成功:", response.data);
+      setSubjects([]);
+      setSubjects(response.data);
+      setSubjects(dummySubjectsA); //開発用に仮置き
+      console.log(subjects);
+    } catch (error) {
+      console.error("エラーが発生しました:", error);
+    } finally {
+      setSubjects(dummySubjectsA);
+    }
+  };
 
-  const fetchSpreadsheetById = async (sheetId: string) => {
+  const fetchReportBySubject = async (selectedSubjectId: string) => {
     setIsLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       const response = await axios.get(
-        `バックエンドAPIのエンドポイント/${sheetId}`
+        `バックエンドAPIのエンドポイント/${selectedSubjectId}`
       );
       console.log("取得成功:", response.data);
       response.data = dummySheetData;
-      navigate(`/${sheetId}`, {
+      navigate(`/${selectedSubjectId}`, {
         state: { sheetData: response.data },
       });
     } catch (error) {
@@ -69,9 +83,17 @@ const SpreadsheetSearch = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    fetchSpreadsheetById(data.selectedSheetId);
+  const onSelectSpreadsheet = (selectedSheetId: string) => {
+    fetchSubjectById(selectedSheetId);
   };
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    fetchReportBySubject(data.selectedSubjectId);
+  };
+
+  useEffect(() => {
+    console.log("Subjects updated:", subjects);
+  }, [subjects]);
 
   return (
     <div>
@@ -88,12 +110,45 @@ const SpreadsheetSearch = () => {
             rules={{ required: { value: true, message: "選択してください" } }}
             render={({ field }) => (
               <Autocomplete
-                placeholder="ここに生徒名を入力"
+                placeholder="スプレッドシートを選択"
                 {...field}
-                items={dummySheets}
+                items={sheets}
                 closeOnSelect={false}
                 allowFree
                 emptyMessage="スプレッドシートが存在しません"
+                variant="flushed"
+                iconProps={{ color: "primary" }}
+                size={"lg"}
+                onChange={(value) => {
+                  console.log(value);
+                  field.onChange(value);
+                  onSelectSpreadsheet(value);
+                }}
+              />
+            )}
+          />
+        </FormControl>
+        <FormControl
+          isInvalid={!!errors.selectedSubjectId}
+          errorMessage={
+            errors.selectedSubjectId
+              ? errors.selectedSubjectId.message
+              : undefined
+          }
+        >
+          <Controller
+            name="selectedSubjectId"
+            control={control}
+            rules={{ required: { value: true, message: "選択してください" } }}
+            render={({ field }) => (
+              <Autocomplete
+                key={subjects?.length || "initial"}
+                placeholder="科目を選択"
+                {...field}
+                items={subjects}
+                closeOnSelect={false}
+                allowFree
+                emptyMessage="先にスプレッドシートを選択してください"
                 variant="flushed"
                 iconProps={{ color: "primary" }}
                 size={"lg"}
