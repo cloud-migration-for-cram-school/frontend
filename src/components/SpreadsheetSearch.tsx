@@ -24,7 +24,7 @@ interface FormData {
 }
 
 const SpreadsheetSearch = () => {
-  const [sheets, setSheets] = useState<Spreadsheet[]>(dummySheets);
+  const [sheets, setSheets] = useState<Spreadsheet[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -34,28 +34,31 @@ const SpreadsheetSearch = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  /*useEffect(() => {
+  useEffect(() => {
     const fetchSheets = async () => {
       try {
         const response = await axios.get<Spreadsheet[]>(
-          "バックエンドAPIのエンドポイント/search"
+          "http://localhost:8000/search"
         );
+        setSheets([]);
         setSheets(response.data);
       } catch (error) {
         console.error("エラーが発生しました:", error);
+      } finally {
+        setSheets(dummySheets);
       }
     };
-  }, []);*/
+    fetchSheets();
+  }, []);
 
   const fetchSubjectById = async (selectedSheetId: string) => {
     try {
-      const response = await axios.get(
-        `バックエンドAPIのエンドポイント/search/subject/${selectedSheetId}`
+      const response = await axios.get<Subject[]>(
+        `http://localhost:8000/search/subjects/${selectedSheetId}`
       );
       console.log("取得成功:", response.data);
       setSubjects([]);
       setSubjects(response.data);
-      setSubjects(dummySubjectsA); //開発用に仮置き
       console.log(subjects);
     } catch (error) {
       console.error("エラーが発生しました:", error);
@@ -69,10 +72,9 @@ const SpreadsheetSearch = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       const response = await axios.get(
-        `バックエンドAPIのエンドポイント/${selectedSubjectId}`
+        `http://localhost:8000/search/subjects/reports/${selectedSubjectId}`
       );
       console.log("取得成功:", response.data);
-      response.data = dummySheetData;
       navigate(`/${selectedSubjectId}`, {
         state: { sheetData: response.data },
       });
@@ -80,6 +82,9 @@ const SpreadsheetSearch = () => {
       console.error("エラーが発生しました:", error);
     } finally {
       setIsLoading(false);
+      navigate(`/${selectedSubjectId}`, {
+        state: { sheetData: dummySheetData },
+      });
     }
   };
 
@@ -91,10 +96,6 @@ const SpreadsheetSearch = () => {
     fetchReportBySubject(data.selectedSubjectId);
   };
 
-  useEffect(() => {
-    console.log("Subjects updated:", subjects);
-  }, [subjects]);
-
   return (
     <div>
       <HStack as="form" onSubmit={handleSubmit(onSubmit)}>
@@ -105,6 +106,7 @@ const SpreadsheetSearch = () => {
           }
         >
           <Controller
+            key={sheets?.length || "initial"}
             name="selectedSheetId"
             control={control}
             rules={{ required: { value: true, message: "選択してください" } }}
@@ -137,12 +139,12 @@ const SpreadsheetSearch = () => {
           }
         >
           <Controller
+            key={subjects?.length || "initial"}
             name="selectedSubjectId"
             control={control}
             rules={{ required: { value: true, message: "選択してください" } }}
             render={({ field }) => (
               <Autocomplete
-                key={subjects?.length || "initial"}
                 placeholder="科目を選択"
                 {...field}
                 items={subjects}

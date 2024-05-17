@@ -16,41 +16,41 @@ const dummySheetData = {
     classOverallStatus: "good",
     rationale: "insert reason",
   },
-  lessonDetails: [
-    {
-      material: "Scramble",
-      chapter: "5th chapter",
-      accuracy: 40,
-    },
-    {
-      material: "Vintage",
-      chapter: "7th chapter",
-      accuracy: 80,
-    },
-    {
-      material: "教科書",
-      chapter: "第7章 分数",
-      accuracy: 90,
-    },
-    {
-      material: "教科書",
-      chapter: "第8章 分数",
-      accuracy: 90,
-    },
-    {
-      material: "教科書",
-      chapter: "第9章 分数",
-      accuracy: 90,
-    },
-    {
-      material: "教科書",
-      chapter: "第10章 分数",
-      accuracy: 90,
-    },
-    {
-      strengthsAndAreasForImprovement: "reasoning was good",
-    },
-  ],
+  lessonDetails: {
+    lessons: [
+      {
+        material: "Scramble",
+        chapter: "5th chapter",
+        accuracy: 40,
+      },
+      {
+        material: "Vintage",
+        chapter: "7th chapter",
+        accuracy: 80,
+      },
+      {
+        material: "教科書",
+        chapter: "第7章 分数",
+        accuracy: 90,
+      },
+      {
+        material: "教科書",
+        chapter: "第8章 分数",
+        accuracy: 90,
+      },
+      {
+        material: "教科書",
+        chapter: "第9章 分数",
+        accuracy: 90,
+      },
+      {
+        material: "教科書",
+        chapter: "第10章 分数",
+        accuracy: 90,
+      },
+    ],
+    strengthsAndAreasForImprovement: "reasoning was good",
+  },
   homework: {
     assignments: [
       {

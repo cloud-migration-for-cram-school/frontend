@@ -1,7 +1,3 @@
-.spreadsheet-container {
-  padding: 20px;
-}
-
 .spreadsheet-container table {
   width: 100%;
   border-collapse: collapse;
@@ -14,6 +10,34 @@
   text-align: left;
 }
 
-.spreadsheet-container th {
-  background-color: #f3f3f3;
+.basic-info th {
+  background-color: #cfe2f3;
+}
+
+.communication th {
+  background-color: #ea9999;
+}
+
+.test-review th {
+  background-color: #d9ead3;
+}
+
+.lesson-details th {
+  background-color: #fff2cc;
+}
+
+.homework-assignments th {
+  background-color: #fce5cd;
+}
+
+.next-test th {
+  background-color: #ead1dc;
+}
+
+.student-status th {
+  background-color: #e6b8af;
+}
+
+.lesson-plan th {
+  background-color: #c9daf8;
 }

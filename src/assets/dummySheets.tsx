@@ -5,10 +5,10 @@ interface Spreadsheet {
 
 const dummySheets: Spreadsheet[] = [
   { label: "スプレッドシート1", value: "1" },
-  { label: "プロジェクト計画", value: "2" },
-  { label: "予算管理表", value: "3" },
-  { label: "会議の議事録", value: "4" },
-  { label: "顧客リスト", value: "5" },
+  { label: "スプレッドシート2", value: "2" },
+  { label: "スプレッドシート3", value: "3" },
+  { label: "スプレッドシート4", value: "4" },
+  { label: "スプレッドシート5", value: "5" },
 ];
 
 export default dummySheets;
