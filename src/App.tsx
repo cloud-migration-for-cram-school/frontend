@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import SpreadsheetSearch from "./components/SpreadsheetSearch";
-import SpreadsheetPage from "./components/SpreadsheetPage";
+import SpreadsheetPageForm from "./components/SpreadsheetPageForm";
 import { UIProvider } from "@yamada-ui/react";
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
     <UIProvider>
       <Routes>
         <Route path="/" element={<SpreadsheetSearch />} />
-        <Route path="/:sheetId" element={<SpreadsheetPage />} />
+        <Route path="/:sheetId" element={<SpreadsheetPageForm />} />
       </Routes>
     </UIProvider>
   );

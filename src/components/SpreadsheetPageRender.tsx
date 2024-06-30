@@ -1,17 +1,17 @@
 import { useLocation } from "react-router-dom";
 import "../styles/SpreadsheetPage.css";
 import dummySheetData from "../assets/dummySheetData";
+import { SheetData } from "../types/SheetData";
 
-const SpreadsheetPage = () => {
+const SpreadsheetPageRender = () => {
   const location = useLocation();
-  const sheetData = location.state?.sheetData || dummySheetData;
+  const sheetData: SheetData = location.state?.sheetData || dummySheetData;
 
   return (
     <div>
       {sheetData ? (
         <div className="spreadsheet-container">
           <div className="basic-info">
-            <strong>Basic Information</strong>
             <table>
               <tbody>
                 <tr>
@@ -35,7 +35,6 @@ const SpreadsheetPage = () => {
           </div>
 
           <div className="communication">
-            <strong>Communication</strong>
             <table>
               <tbody>
                 <tr>
@@ -51,7 +50,6 @@ const SpreadsheetPage = () => {
           </div>
 
           <div className="test-review">
-            <strong>Test Review</strong>
             <table>
               <tbody>
                 <tr>
@@ -69,7 +67,6 @@ const SpreadsheetPage = () => {
           </div>
 
           <div className="lesson-details">
-            <strong>Lesson Details</strong>
             <table>
               <thead>
                 <tr>
@@ -87,10 +84,8 @@ const SpreadsheetPage = () => {
                   </tr>
                 ))}
                 <tr>
-                  <th colSpan={3}>Strengths and Areas for Improvement</th>
-                </tr>
-                <tr>
-                  <td colSpan={3}>
+                  <th>Strengths and Areas for Improvement</th>
+                  <td colSpan={2}>
                     {sheetData.lessonDetails.strengthsAndAreasForImprovement}
                   </td>
                 </tr>
@@ -99,7 +94,6 @@ const SpreadsheetPage = () => {
           </div>
 
           <div className="homework-assignments">
-            <strong>Homework Assignments</strong>
             <table>
               <thead>
                 <tr>
@@ -133,7 +127,6 @@ const SpreadsheetPage = () => {
           </div>
 
           <div className="next-test">
-            <strong>Next Test</strong>
             <table>
               <thead>
                 <tr>
@@ -155,7 +148,6 @@ const SpreadsheetPage = () => {
           </div>
 
           <div className="student-status">
-            <strong>Student Status</strong>
             <table>
               <tbody>
                 <tr>
@@ -167,7 +159,6 @@ const SpreadsheetPage = () => {
           </div>
 
           <div className="lesson-plan">
-            <strong>Lesson Plan</strong>
             <table>
               <tbody>
                 <tr>
@@ -189,4 +180,4 @@ const SpreadsheetPage = () => {
   );
 };
 
-export default SpreadsheetPage;
+export default SpreadsheetPageRender;

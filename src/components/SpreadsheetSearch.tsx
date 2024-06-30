@@ -3,25 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { HStack, Autocomplete, FormControl, Button } from "@yamada-ui/react";
+import { Spreadsheet, Subject, FormData } from "../types/SpreadsheetSearch";
 import dummySheetData from "../assets/dummySheetData";
 import dummySheets from "../assets/dummySheets";
 import dummySubjectsA from "../assets/dummySubjectsA";
 import dummySubjectsB from "../assets/dummySubjectB";
-
-interface Spreadsheet {
-  label: string;
-  value: string;
-}
-
-interface Subject {
-  label: string;
-  value: string;
-}
-
-interface FormData {
-  selectedSheetId: string;
-  selectedSubjectId: string;
-}
 
 const SpreadsheetSearch = () => {
   const [sheets, setSheets] = useState<Spreadsheet[]>([]);
@@ -40,7 +26,7 @@ const SpreadsheetSearch = () => {
         const response = await axios.get<Spreadsheet[]>(
           "http://localhost:8000/search"
         );
-        setSheets([]);
+        //setSheets([]);
         setSheets(response.data);
       } catch (error) {
         console.error("エラーが発生しました:", error);
@@ -57,7 +43,7 @@ const SpreadsheetSearch = () => {
         `http://localhost:8000/search/subjects/${selectedSheetId}`
       );
       console.log("取得成功:", response.data);
-      setSubjects([]);
+      //setSubjects([]);
       setSubjects(response.data);
       console.log(subjects);
     } catch (error) {
@@ -70,7 +56,7 @@ const SpreadsheetSearch = () => {
   const fetchReportBySubject = async (selectedSubjectId: string) => {
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      //await new Promise((resolve) => setTimeout(resolve, 2000));
       const response = await axios.get(
         `http://localhost:8000/search/subjects/reports/${selectedSubjectId}`
       );
