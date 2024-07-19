@@ -26,7 +26,6 @@ const SpreadsheetSearch = () => {
         const response = await axios.get<Spreadsheet[]>(
           "http://localhost:8000/search"
         );
-        //setSheets([]);
         setSheets(response.data);
       } catch (error) {
         console.error("エラーが発生しました:", error);
@@ -42,10 +41,7 @@ const SpreadsheetSearch = () => {
       const response = await axios.get<Subject[]>(
         `http://localhost:8000/search/subjects/${selectedSheetId}`
       );
-      console.log("取得成功:", response.data);
-      //setSubjects([]);
       setSubjects(response.data);
-      console.log(subjects);
     } catch (error) {
       console.error("エラーが発生しました:", error);
     } finally {
@@ -56,11 +52,9 @@ const SpreadsheetSearch = () => {
   const fetchReportBySubject = async (selectedSubjectId: string) => {
     setIsLoading(true);
     try {
-      //await new Promise((resolve) => setTimeout(resolve, 2000));
       const response = await axios.get(
         `http://localhost:8000/search/subjects/reports/${selectedSubjectId}`
       );
-      console.log("取得成功:", response.data);
       navigate(`/${selectedSubjectId}`, {
         state: { sheetData: response.data },
       });
@@ -103,7 +97,7 @@ const SpreadsheetSearch = () => {
                 items={sheets}
                 closeOnSelect={false}
                 allowFree
-                emptyMessage="スプレッドシートが存在しません"
+                emptyMessage="存在しません"
                 variant="flushed"
                 iconProps={{ color: "primary" }}
                 size={"lg"}
