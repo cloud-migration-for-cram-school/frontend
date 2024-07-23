@@ -1,11 +1,15 @@
 import { useForm, Controller } from "react-hook-form";
+import { useState } from "react";
 import { SheetData } from "../types/SheetData";
+import { Button } from "@yamada-ui/react";
 
 const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void }) => {
   const { control, handleSubmit } = useForm<SheetData>();
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="spreadsheet-container">
+    <form onSubmit={handleSubmit(onSubmit)} className="spreadsheet-column">
+      <h1 className="report-header">新しい報告書</h1>
       <div className="basic-info">
         <table>
           <tbody>
@@ -15,8 +19,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="basicInfo.dateAndTime"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
               <th>Subject Name</th>
@@ -24,8 +27,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="basicInfo.subjectName"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
               <th>Teacher Name</th>
@@ -33,8 +35,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="basicInfo.teacherName"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -44,8 +45,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="basicInfo.progressInSchool"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
               <th>Homework Progress</th>
@@ -53,8 +53,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="basicInfo.homeworkProgress"
                   control={control}
-                  defaultValue={0}
-                  render={({ field }) => <input type="number" {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
               <th>Homework Accuracy</th>
@@ -62,8 +61,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="basicInfo.homeworkAccuracy"
                   control={control}
-                  defaultValue={0}
-                  render={({ field }) => <input type="number" {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -80,8 +78,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="communication.forNextTeacher"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -91,8 +88,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="communication.fromDirector"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -109,8 +105,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="testReview.testAccuracy"
                   control={control}
-                  defaultValue={0}
-                  render={({ field }) => <input type="number" {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
               <th>Class Overall Status</th>
@@ -118,8 +113,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="testReview.classOverallStatus"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -129,8 +123,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="testReview.rationale"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -154,24 +147,21 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                   <Controller
                     name={`lessonDetails.lessons.${index}.material`}
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <input {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
                 <td>
                   <Controller
                     name={`lessonDetails.lessons.${index}.chapter`}
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <input {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
                 <td>
                   <Controller
                     name={`lessonDetails.lessons.${index}.accuracy`}
                     control={control}
-                    defaultValue={0}
-                    render={({ field }) => <input type="number" {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
               </tr>
@@ -182,8 +172,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="lessonDetails.strengthsAndAreasForImprovement"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -209,40 +198,35 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                   <Controller
                     name={`homework.assignments.${index}.day`}
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <input {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
                 <td>
                   <Controller
                     name={`homework.assignments.${index}.tasks.0.material`}
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <input {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
                 <td>
                   <Controller
                     name={`homework.assignments.${index}.tasks.0.rangeAndPages`}
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <input {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
                 <td>
                   <Controller
                     name={`homework.assignments.${index}.tasks.1.material`}
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <input {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
                 <td>
                   <Controller
                     name={`homework.assignments.${index}.tasks.1.rangeAndPages`}
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <input {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
               </tr>
@@ -253,8 +237,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="homework.advice"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -264,8 +247,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="homework.noteForNextSession"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -289,24 +271,21 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                   <Controller
                     name={`nextTest.${index}.material`}
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <input {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
                 <td>
                   <Controller
                     name={`nextTest.${index}.chapter`}
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <input {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
                 <td>
                   <Controller
                     name={`nextTest.${index}.rangeAndPages`}
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <input {...field} />}
+                    render={({ field }) => <textarea {...field} className="table-textarea" />}
                   />
                 </td>
               </tr>
@@ -324,8 +303,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="studentStatus"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -342,8 +320,7 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="lessonPlan.ifTestOK"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
@@ -353,15 +330,24 @@ const RenderSheetDataForm = ({ onSubmit }: { onSubmit: (data: SheetData) => void
                 <Controller
                   name="lessonPlan.ifTestNG"
                   control={control}
-                  defaultValue=""
-                  render={({ field }) => <input {...field} />}
+                  render={({ field }) => <textarea {...field} className="table-textarea" />}
                 />
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <button type="submit">Submit</button>
+      <Button
+        type="submit"
+        loadingIcon="grid"
+        colorScheme="primary"
+        isLoading={isLoading}
+        variant="link"
+        size={"lg"}
+        className="post-report"
+      >
+        新しい報告書を登録
+      </Button>
     </form>
   );
 };

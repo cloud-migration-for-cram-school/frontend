@@ -1,7 +1,14 @@
 import { SheetData } from "../types/SheetData";
+import { Button } from "@yamada-ui/react";
 
-export const RenderSheetData = (sheetData: SheetData) => (
-  <div className="spreadsheet-container">
+export const RenderSheetData = ({ sheetData }: { sheetData: SheetData }) => (
+  <div className="spreadsheet-column">
+    <h1 className="report-header">
+      過去の報告書
+      <span className="edit">
+      <Button colorScheme="primary" variant="link" size={"md"}>(編集する)</Button>
+      </span>
+    </h1>
     <div className="basic-info">
       <table>
         <tbody>
@@ -76,9 +83,7 @@ export const RenderSheetData = (sheetData: SheetData) => (
           ))}
           <tr>
             <th>Strengths and Areas for Improvement</th>
-            <td colSpan={2}>
-              {sheetData.lessonDetails.strengthsAndAreasForImprovement}
-            </td>
+            <td colSpan={2}>{sheetData.lessonDetails.strengthsAndAreasForImprovement}</td>
           </tr>
         </tbody>
       </table>
