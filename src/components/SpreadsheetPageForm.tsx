@@ -5,7 +5,7 @@ import dummySheetData from "../assets/dummySheetData";
 import { SheetData } from "../types/SheetData";
 import { RenderSheetData } from "./RenderSheetData";
 import RenderSheetDataForm from "./RenderSheetDataForm";
-import { Divider } from "@yamada-ui/react"
+import { Kbd } from "@yamada-ui/react"
 
 const SpreadsheetPageForm = () => {
   const [sheetData1, setSheetData1] = useState<SheetData | null>(null);
@@ -28,12 +28,16 @@ const SpreadsheetPageForm = () => {
 
   return (
     <div className="spreadsheet-page">
-      <div className="spreadsheet-column">
-        <RenderSheetDataForm onSubmit={handleFormSubmit} />
+      <div className="spreadsheet-header">
+        <p><Kbd>Tab</Kbd>または<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd>で入力セルを移動</p>
       </div>
-      <Divider orientation="vertical" variant="solid" />
-      <div className="spreadsheet-column">
-        {sheetData1 && <RenderSheetData sheetData={sheetData1} />}
+      <div className="spreadsheet-content">
+        <div className="spreadsheet-column">
+          <RenderSheetDataForm onSubmit={handleFormSubmit} />
+        </div>
+        <div className="spreadsheet-column">
+          {sheetData1 && <RenderSheetData sheetData={sheetData1} />}
+        </div>
       </div>
     </div>
   );
