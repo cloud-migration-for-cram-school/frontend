@@ -5,7 +5,7 @@ import dummySheetData from "../assets/dummySheetData";
 import { SheetData } from "../types/SheetData";
 import { RenderSheetData } from "./RenderSheetData";
 import RenderSheetDataForm from "./RenderSheetDataForm";
-import { Kbd } from "@yamada-ui/react";
+import { Kbd, Alert, AlertDescription } from "@yamada-ui/react";
 
 const SpreadsheetPageForm = () => {
   const [sheetData1, setSheetData1] = useState<SheetData | null>(null);
@@ -25,9 +25,11 @@ const SpreadsheetPageForm = () => {
   return (
     <div className="spreadsheet-page">
       <div className="spreadsheet-header">
-        <p>
-          <Kbd>Tab</Kbd>または<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd>で入力セルを移動
-        </p>
+        <Alert variant="island-accent" mt={0} mb={0} mr={720} ml={0}>
+          <AlertDescription>
+          <Kbd>Tab</Kbd>または<Kbd>Shift + Tab</Kbd>で入力セルを移動
+          </AlertDescription>
+        </Alert>
       </div>
       <div className="spreadsheet-content">
         <div className="spreadsheet-column">
