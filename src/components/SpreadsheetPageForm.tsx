@@ -5,7 +5,7 @@ import dummySheetData from "../assets/dummySheetData";
 import { SheetData } from "../types/SheetData";
 import { RenderSheetData } from "./RenderSheetData";
 import RenderSheetDataForm from "./RenderSheetDataForm";
-import { Kbd } from "@yamada-ui/react"
+import { Kbd } from "@yamada-ui/react";
 
 const SpreadsheetPageForm = () => {
   const [sheetData1, setSheetData1] = useState<SheetData | null>(null);
@@ -22,18 +22,16 @@ const SpreadsheetPageForm = () => {
     }
   }, [location, sheetData]);
 
-  const handleFormSubmit = (data: SheetData) => {
-    console.log("Form Submitted", data);
-  };
-
   return (
     <div className="spreadsheet-page">
       <div className="spreadsheet-header">
-        <p><Kbd>Tab</Kbd>または<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd>で入力セルを移動</p>
+        <p>
+          <Kbd>Tab</Kbd>または<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd>で入力セルを移動
+        </p>
       </div>
       <div className="spreadsheet-content">
         <div className="spreadsheet-column">
-          <RenderSheetDataForm onSubmit={handleFormSubmit} />
+          <RenderSheetDataForm />
         </div>
         <div className="spreadsheet-column">
           {sheetData1 && <RenderSheetData sheetData={sheetData1} />}
