@@ -3,8 +3,8 @@ export interface BasicInfo {
   subjectName: string;
   teacherName: string;
   progressInSchool: string;
-  homeworkProgress: number;
-  homeworkAccuracy: number;
+  homeworkProgress: string;
+  homeworkAccuracy: string;
 }
 
 export interface Communication {
@@ -13,7 +13,7 @@ export interface Communication {
 }
 
 export interface TestReview {
-  testAccuracy: number;
+  testAccuracy: string;
   classOverallStatus: string;
   rationale: string;
 }
@@ -21,7 +21,7 @@ export interface TestReview {
 export interface LessonDetail {
   material: string;
   chapter: string;
-  accuracy: number;
+  accuracy: string;
 }
 
 export interface LessonDetails {

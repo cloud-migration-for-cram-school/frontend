@@ -1,15 +1,64 @@
 import { useForm, Controller } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SheetData } from "../types/SheetData";
-import { Button, FormControl, ErrorMessage, Card, CardHeader, CardBody, CardFooter, Alert, AlertDescription } from "@yamada-ui/react";
+import { Subject, Propotion, Test } from "../types/SpreadsheetPageForm";
+import { Button, FormControl, Autocomplete, ErrorMessage, Card, CardHeader, CardBody, CardFooter, Alert, AlertDescription } from "@yamada-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const RenderSheetDataForm = () => {
-  const { control, handleSubmit } = useForm<SheetData>();
+  const { control, handleSubmit, setValue } = useForm<SheetData>();
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
   const navigate = useNavigate();
+
+  const subjects: Subject[] = [
+    { label: "英語", value: "英語" },
+    { label: "数学", value: "数学" },
+    { label: "算数", value: "算数" },
+    { label: "国語", value: "国語" },
+    { label: "理科", value: "理科" },
+    { label: "社会", value: "社会" },
+    { label: "特色", value: "特色" },
+    { label: "その他", value: "その他" },
+  ]
+
+  const propotion: Propotion[] = [
+    { label: "100 %", value: "100 %" },
+    { label: "80 %", value: "80 %" },
+    { label: "60 %", value: "60 %" },
+    { label: "40 %", value: "40 %" },
+    { label: "40 %以下", value: "40 %以下" },
+    { label: "未完", value: "未完" },
+    { label: "連続", value: "連続" },
+    { label: "体験", value: "体験" },
+    { label: "初回", value: "初回" },
+  ]
+
+  const tests: Test[] = [
+    { label: "CT", value: "CT" },
+    { label: "LCT", value: "LCT" },
+    { label: "PT", value: "PT" },
+    { label: "英単語", value: "英単語" },
+    { label: "i+1部", value: "i+1部" },
+    { label: "i+2部", value: "i+2部" },
+    { label: "S単確", value: "S単確" },
+    { label: "その他", value: "その他" },
+  ]
+
+  useEffect(() => {
+    const today = new Date();
+    const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
+    const formattedDate = `${today.getMonth() + 1}月${today.getDate()}日(${dayNames[today.getDay()]})`;
+    setValue("basicInfo.dateAndTime", formattedDate);
+
+    for (let i = 0; i < 6; i++) {
+      const futureDate = new Date(today);
+      futureDate.setDate(today.getDate() + i + 1);
+      const formattedFutureDate = `${futureDate.getMonth() + 1}月${futureDate.getDate()}日(${dayNames[futureDate.getDay()]})`;
+      setValue(`homework.assignments.${i}.day`, formattedFutureDate);
+    }
+  }, []);
 
   const onSubmit = async (data: SheetData) => {
     setIsLoading(true);
@@ -50,7 +99,18 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="basicInfo.subjectName"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <Autocomplete
+                          {...field}
+                          iconProps={{ color: "primary" }}
+                          closeOnSelect={false}
+                          allowFree
+                          emptyMessage="存在しません"
+                          variant="unstyled"
+                          text={12}
+                          items={subjects}
+                          />
+                        )}
                       />
                     </td>
                     <th>Teacher Name</th>
@@ -76,7 +136,18 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="basicInfo.homeworkProgress"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <Autocomplete
+                          {...field}
+                          iconProps={{ color: "primary" }}
+                          closeOnSelect={false}
+                          allowFree
+                          emptyMessage="存在しません"
+                          variant="unstyled"
+                          text={12}
+                          items={propotion}
+                          />
+                        )}
                       />
                     </td>
                     <th>Homework Accuracy</th>
@@ -84,7 +155,18 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="basicInfo.homeworkAccuracy"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <Autocomplete
+                          {...field}
+                          iconProps={{ color: "primary" }}
+                          closeOnSelect={false}
+                          allowFree
+                          emptyMessage="存在しません"
+                          variant="unstyled"
+                          text={12}
+                          items={propotion}
+                          />
+                        )}
                       />
                     </td>
                   </tr>
@@ -128,7 +210,18 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="testReview.testAccuracy"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <Autocomplete
+                          {...field}
+                          iconProps={{ color: "primary" }}
+                          closeOnSelect={false}
+                          allowFree
+                          emptyMessage="存在しません"
+                          variant="unstyled"
+                          text={12}
+                          items={propotion}
+                          />
+                        )}
                       />
                     </td>
                     <th>Class Overall Status</th>
@@ -184,7 +277,18 @@ const RenderSheetDataForm = () => {
                         <Controller
                           name={`lessonDetails.lessons.${index}.accuracy`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <Autocomplete
+                            {...field}
+                            iconProps={{ color: "primary" }}
+                            closeOnSelect={false}
+                            allowFree
+                            emptyMessage="存在しません"
+                            variant="unstyled"
+                            text={12}
+                            items={propotion}
+                            />
+                          )}
                         />
                       </td>
                     </tr>
@@ -294,7 +398,18 @@ const RenderSheetDataForm = () => {
                         <Controller
                           name={`nextTest.${index}.material`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <Autocomplete
+                            {...field}
+                            iconProps={{ color: "primary" }}
+                            closeOnSelect={false}
+                            allowFree
+                            emptyMessage="存在しません"
+                            variant="unstyled"
+                            text={12}
+                            items={tests}
+                            />
+                          )}
                         />
                       </td>
                       <td>
@@ -367,7 +482,6 @@ const RenderSheetDataForm = () => {
               loadingIcon="grid"
               colorScheme="primary"
               isLoading={isLoading}
-              variant="solid"
               size="md"
               loadingText="登録後検索画面に戻ります"
               className="post-report"
