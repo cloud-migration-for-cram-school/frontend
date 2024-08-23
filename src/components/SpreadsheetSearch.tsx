@@ -49,20 +49,20 @@ const SpreadsheetSearch = () => {
     }
   };
 
-  const fetchReportBySubject = async (selectedSubjectId: string) => {
+  const fetchReportBySubject = async (selectedSheetId: string, selectedSubjectId: string) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:8000/search/subjects/reports/${selectedSubjectId}`
       );
-      navigate(`/${selectedSubjectId}`, {
+      navigate(`/${selectedSheetId}/${selectedSubjectId}`, {
         state: { sheetData: response.data },
       });
     } catch (error) {
       console.error("エラーが発生しました:", error);
     } finally {
       setIsLoading(false);
-      navigate(`/${selectedSubjectId}`, {
+      navigate(`/${selectedSheetId}/${selectedSubjectId}`, {
         state: { sheetData: dummySheetData },
       });
     }
@@ -73,7 +73,7 @@ const SpreadsheetSearch = () => {
   };
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    fetchReportBySubject(data.selectedSubjectId);
+    fetchReportBySubject(data.selectedSheetId, data.selectedSubjectId);
   };
 
   return (

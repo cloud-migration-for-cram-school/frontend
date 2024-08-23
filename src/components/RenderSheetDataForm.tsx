@@ -4,13 +4,14 @@ import { SheetData } from "../types/SheetData";
 import { Subject, Propotion, Test } from "../types/SpreadsheetPageForm";
 import { Button, FormControl, Autocomplete, ErrorMessage, Card, CardHeader, CardBody, CardFooter, Alert, AlertDescription } from "@yamada-ui/react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const RenderSheetDataForm = () => {
   const { control, handleSubmit, setValue } = useForm<SheetData>();
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
   const navigate = useNavigate();
+  const { sheetId, subjectId } = useParams();
 
   const subjects: Subject[] = [
     { label: "英語", value: "英語" },
@@ -64,7 +65,7 @@ const RenderSheetDataForm = () => {
     setIsLoading(true);
     setIsInvalid(false);
     try {
-      await axios.post("http://localhost:8000/reports/submit", data);
+      await axios.post(`http://localhost:8000/submit/report/${sheetId}/${subjectId}`, data);
       navigate("/");
     } catch (error) {
       console.error("エラーが発生しました:", error);

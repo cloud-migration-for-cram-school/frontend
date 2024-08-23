@@ -8,7 +8,7 @@ function App() {
     <UIProvider>
       <Routes>
         <Route path="/" element={<SpreadsheetSearch />} />
-        <Route path="/:sheetId" element={<SpreadsheetPageForm />} />
+        <Route path="/:sheetId/:subjectId" element={<SpreadsheetPageForm />} />
       </Routes>
     </UIProvider>
   );
