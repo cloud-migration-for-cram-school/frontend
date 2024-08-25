@@ -7,7 +7,7 @@ import { Spreadsheet, Subject, FormData } from "../types/SpreadsheetSearch";
 import dummySheetData from "../assets/dummySheetData";
 import dummySheets from "../assets/dummySheets";
 import dummySubjectsA from "../assets/dummySubjectsA";
-import dummySubjectsB from "../assets/dummySubjectB";
+import { SheetData } from "../types/SheetData";
 
 const SpreadsheetSearch = () => {
   const [sheets, setSheets] = useState<Spreadsheet[]>([]);
@@ -24,47 +24,42 @@ const SpreadsheetSearch = () => {
     const fetchSheets = async () => {
       try {
         const response = await axios.get<Spreadsheet[]>(
-          "http://localhost:8000/search"
+          "http://~:8080/search"
         );
         setSheets(response.data);
       } catch (error) {
         console.error("エラーが発生しました:", error);
-      } finally {
-        setSheets(dummySheets);
       }
     };
     fetchSheets();
+    setSheets(dummySheets);
   }, []);
 
   const fetchSubjectById = async (selectedSheetId: string) => {
     try {
       const response = await axios.get<Subject[]>(
-        `http://localhost:8000/search/subjects/${selectedSheetId}`
+        `http://~:8080/search/subjects/${selectedSheetId}`
       );
       setSubjects(response.data);
     } catch (error) {
       console.error("エラーが発生しました:", error);
-    } finally {
-      setSubjects(dummySubjectsA);
     }
+    setSubjects(dummySubjectsA);
   };
 
-  const fetchReportBySubject = async (selectedSheetId: string, selectedSubjectId: string) => {
+  const fetchReportBySubject = async (sheet_id: string, subjects_id: string) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:8000/search/subjects/reports/${selectedSubjectId}`
+      const response = await axios.get<SheetData>(
+        `http://~:8080/search/subjects/reports/${sheet_id}/${subjects_id}`
       );
-      navigate(`/${selectedSheetId}/${selectedSubjectId}`, {
+      navigate(`/${sheet_id}/${subjects_id}`, {
         state: { sheetData: response.data },
       });
     } catch (error) {
       console.error("エラーが発生しました:", error);
     } finally {
       setIsLoading(false);
-      navigate(`/${selectedSheetId}/${selectedSubjectId}`, {
-        state: { sheetData: dummySheetData },
-      });
     }
   };
 

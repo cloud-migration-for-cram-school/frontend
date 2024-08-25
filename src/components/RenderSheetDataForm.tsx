@@ -7,11 +7,52 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 const RenderSheetDataForm = () => {
-  const { control, handleSubmit, setValue } = useForm<SheetData>();
+  const { control, handleSubmit, setValue } = useForm<SheetData>({
+    defaultValues: {
+      basicInfo: {
+        dateAndTime: "",
+        subjectName: "",
+        teacherName: "",
+        progressInSchool: "",
+        homeworkProgress: "",
+        homeworkAccuracy: "",
+      },
+      communication: {
+        forNextTeacher: "",
+        fromDirector: "",
+      },
+      testReview: {
+        testAccuracy: "",
+        classOverallStatus: "",
+        rationale: "",
+      },
+      lessonDetails: {
+        lessons: Array(6).fill({ material: "", chapter: "", accuracy: "" }),
+        strengthsAndAreasForImprovement: "",
+      },
+      homework: {
+        assignments: Array(6).fill({
+          day: "",
+          tasks: [
+            { material: "", rangeAndPages: "" },
+            { material: "", rangeAndPages: "" },
+          ],
+        }),
+        advice: "",
+        noteForNextSession: "",
+      },
+      nextTest: Array(3).fill({ material: "", chapter: "", rangeAndPages: "" }),
+      studentStatus: "",
+      lessonPlan: {
+        ifTestOK: "",
+        ifTestNG: "",
+      },
+    },
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
   const navigate = useNavigate();
-  const { sheetId, subjectId } = useParams();
+  const { sheet_id, subjects_id } = useParams();
 
   const subjects: Subject[] = [
     { label: "英語", value: "英語" },
@@ -65,7 +106,7 @@ const RenderSheetDataForm = () => {
     setIsLoading(true);
     setIsInvalid(false);
     try {
-      await axios.post(`http://localhost:8000/submit/report/${sheetId}/${subjectId}`, data);
+      await axios.post(`http://~:8080/submit/report/${sheet_id}/${subjects_id}`, data);
       navigate("/");
     } catch (error) {
       console.error("エラーが発生しました:", error);

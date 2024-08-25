@@ -9,17 +9,11 @@ import { Kbd, Alert, AlertDescription } from "@yamada-ui/react";
 
 const SpreadsheetPageForm = () => {
   const [sheetData1, setSheetData1] = useState<SheetData | null>(null);
-  const [sheetData2, setSheetData2] = useState<SheetData | null>(null);
   const location = useLocation();
-  const sheetData: SheetData[] = location.state?.sheetData || dummySheetData;
+  const sheetData: SheetData = location.state.sheetData;
 
   useEffect(() => {
-    if (sheetData.length >= 2) {
-      setSheetData1(sheetData[0]);
-      setSheetData2(sheetData[1]);
-    } else if (sheetData.length === 1) {
-      setSheetData1(sheetData[0]);
-    }
+      setSheetData1(sheetData);
   }, [location, sheetData]);
 
   return (
