@@ -63,6 +63,9 @@ const SpreadsheetSearch = () => {
       setIsInvalid(true);
     } finally {
       setIsLoading(false);
+      navigate(`/${sheet_id}/${subjects_id}`, {
+        state: { sheetData: dummySheetData },
+      });
     }
   };
 

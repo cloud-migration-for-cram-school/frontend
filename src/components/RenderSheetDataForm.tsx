@@ -6,9 +6,25 @@ import { Button, FormControl, Autocomplete, ErrorMessage, Card, CardHeader, Card
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
-const RenderSheetDataForm = () => {
-  const { control, handleSubmit, setValue } = useForm<SheetData>({
-    defaultValues: {
+interface RenderSheetDataFormProps {
+  currentFormData?: SheetData;
+  setCurrentFormData: (data: SheetData) => void;
+  isEditing: boolean;
+  onCancelEdit: () => void;
+  isInvalid: boolean;
+  setIsInvalid: (value: boolean) => void;
+}
+
+const RenderSheetDataForm = ({
+  currentFormData,
+  setCurrentFormData,
+  isEditing,
+  onCancelEdit,
+  isInvalid,
+  setIsInvalid,
+}: RenderSheetDataFormProps) => {
+  const { control, handleSubmit, setValue, getValues } = useForm<SheetData>({
+    defaultValues: currentFormData || {
       basicInfo: {
         dateAndTime: "",
         subjectName: "",
@@ -49,8 +65,8 @@ const RenderSheetDataForm = () => {
       },
     },
   });
+
   const [isLoading, setIsLoading] = useState(false);
-  const [isInvalid, setIsInvalid] = useState(false);
   const navigate = useNavigate();
   const { sheet_id, subjects_id } = useParams();
 
@@ -63,7 +79,7 @@ const RenderSheetDataForm = () => {
     { label: "社会", value: "社会" },
     { label: "特色", value: "特色" },
     { label: "その他", value: "その他" },
-  ]
+  ];
 
   const propotion: Propotion[] = [
     { label: "100 %", value: "100 %" },
@@ -75,7 +91,7 @@ const RenderSheetDataForm = () => {
     { label: "連続", value: "連続" },
     { label: "体験", value: "体験" },
     { label: "初回", value: "初回" },
-  ]
+  ];
 
   const tests: Test[] = [
     { label: "CT", value: "CT" },
@@ -86,21 +102,23 @@ const RenderSheetDataForm = () => {
     { label: "i+2部", value: "i+2部" },
     { label: "S単確", value: "S単確" },
     { label: "その他", value: "その他" },
-  ]
+  ];
 
   useEffect(() => {
-    const today = new Date();
-    const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
-    const formattedDate = `${today.getMonth() + 1}月${today.getDate()}日(${dayNames[today.getDay()]})`;
-    setValue("basicInfo.dateAndTime", formattedDate);
+    if (!isEditing) {
+      const today = new Date();
+      const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
+      const formattedDate = `${today.getMonth() + 1}月${today.getDate()}日(${dayNames[today.getDay()]})`;
+      setValue("basicInfo.dateAndTime", formattedDate);
 
-    for (let i = 0; i < 6; i++) {
-      const futureDate = new Date(today);
-      futureDate.setDate(today.getDate() + i + 1);
-      const formattedFutureDate = `${futureDate.getMonth() + 1}月${futureDate.getDate()}日(${dayNames[futureDate.getDay()]})`;
-      setValue(`homework.assignments.${i}.day`, formattedFutureDate);
+      for (let i = 0; i < 6; i++) {
+        const futureDate = new Date(today);
+        futureDate.setDate(today.getDate() + i + 1);
+        const formattedFutureDate = `${futureDate.getMonth() + 1}月${futureDate.getDate()}日(${dayNames[futureDate.getDay()]})`;
+        setValue(`homework.assignments.${i}.day`, formattedFutureDate);
+      }
     }
-  }, []);
+  }, [isEditing, setValue]);
 
   const onSubmit = async (data: SheetData) => {
     setIsLoading(true);
@@ -117,11 +135,21 @@ const RenderSheetDataForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="spreadsheet-column">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      onChange={() => {
+        if (!isEditing) {
+          setCurrentFormData(getValues());
+        }
+      }}
+      className="spreadsheet-column"
+    >
       <Card>
         <FormControl isInvalid={isInvalid}>
           <CardHeader>
-            <h1 className="report-header">新しい報告書</h1>
+            <h1 className="report-header">
+              {isEditing ? "報告書を編集" : "新しい報告書"}
+            </h1>
           </CardHeader>
           <CardBody>
             <div className="basic-info">
@@ -133,7 +161,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="basicInfo.dateAndTime"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                     <th>Subject Name</th>
@@ -143,14 +173,14 @@ const RenderSheetDataForm = () => {
                         control={control}
                         render={({ field }) => (
                           <Autocomplete
-                          {...field}
-                          iconProps={{ color: "primary" }}
-                          closeOnSelect={false}
-                          allowFree
-                          emptyMessage="存在しません"
-                          variant="unstyled"
-                          text={12}
-                          items={subjects}
+                            {...field}
+                            iconProps={{ color: "primary" }}
+                            closeOnSelect={false}
+                            allowFree
+                            emptyMessage="存在しません"
+                            variant="unstyled"
+                            text={12}
+                            items={subjects}
                           />
                         )}
                       />
@@ -160,7 +190,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="basicInfo.teacherName"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -170,7 +202,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="basicInfo.progressInSchool"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                     <th>Homework Progress</th>
@@ -180,14 +214,14 @@ const RenderSheetDataForm = () => {
                         control={control}
                         render={({ field }) => (
                           <Autocomplete
-                          {...field}
-                          iconProps={{ color: "primary" }}
-                          closeOnSelect={false}
-                          allowFree
-                          emptyMessage="存在しません"
-                          variant="unstyled"
-                          text={12}
-                          items={propotion}
+                            {...field}
+                            iconProps={{ color: "primary" }}
+                            closeOnSelect={false}
+                            allowFree
+                            emptyMessage="存在しません"
+                            variant="unstyled"
+                            text={12}
+                            items={propotion}
                           />
                         )}
                       />
@@ -199,14 +233,14 @@ const RenderSheetDataForm = () => {
                         control={control}
                         render={({ field }) => (
                           <Autocomplete
-                          {...field}
-                          iconProps={{ color: "primary" }}
-                          closeOnSelect={false}
-                          allowFree
-                          emptyMessage="存在しません"
-                          variant="unstyled"
-                          text={12}
-                          items={propotion}
+                            {...field}
+                            iconProps={{ color: "primary" }}
+                            closeOnSelect={false}
+                            allowFree
+                            emptyMessage="存在しません"
+                            variant="unstyled"
+                            text={12}
+                            items={propotion}
                           />
                         )}
                       />
@@ -225,7 +259,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="communication.forNextTeacher"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -235,7 +271,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="communication.fromDirector"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -254,14 +292,14 @@ const RenderSheetDataForm = () => {
                         control={control}
                         render={({ field }) => (
                           <Autocomplete
-                          {...field}
-                          iconProps={{ color: "primary" }}
-                          closeOnSelect={false}
-                          allowFree
-                          emptyMessage="存在しません"
-                          variant="unstyled"
-                          text={12}
-                          items={propotion}
+                            {...field}
+                            iconProps={{ color: "primary" }}
+                            closeOnSelect={false}
+                            allowFree
+                            emptyMessage="存在しません"
+                            variant="unstyled"
+                            text={12}
+                            items={propotion}
                           />
                         )}
                       />
@@ -271,7 +309,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="testReview.classOverallStatus"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -281,7 +321,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="testReview.rationale"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -305,14 +347,18 @@ const RenderSheetDataForm = () => {
                         <Controller
                           name={`lessonDetails.lessons.${index}.material`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <textarea {...field} className="table-textarea" />
+                          )}
                         />
                       </td>
                       <td>
                         <Controller
                           name={`lessonDetails.lessons.${index}.chapter`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <textarea {...field} className="table-textarea" />
+                          )}
                         />
                       </td>
                       <td>
@@ -321,14 +367,14 @@ const RenderSheetDataForm = () => {
                           control={control}
                           render={({ field }) => (
                             <Autocomplete
-                            {...field}
-                            iconProps={{ color: "primary" }}
-                            closeOnSelect={false}
-                            allowFree
-                            emptyMessage="存在しません"
-                            variant="unstyled"
-                            text={12}
-                            items={propotion}
+                              {...field}
+                              iconProps={{ color: "primary" }}
+                              closeOnSelect={false}
+                              allowFree
+                              emptyMessage="存在しません"
+                              variant="unstyled"
+                              text={12}
+                              items={propotion}
                             />
                           )}
                         />
@@ -341,7 +387,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="lessonDetails.strengthsAndAreasForImprovement"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -367,35 +415,45 @@ const RenderSheetDataForm = () => {
                         <Controller
                           name={`homework.assignments.${index}.day`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <textarea {...field} className="table-textarea" />
+                          )}
                         />
                       </td>
                       <td>
                         <Controller
                           name={`homework.assignments.${index}.tasks.0.material`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <textarea {...field} className="table-textarea" />
+                          )}
                         />
                       </td>
                       <td>
                         <Controller
                           name={`homework.assignments.${index}.tasks.0.rangeAndPages`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <textarea {...field} className="table-textarea" />
+                          )}
                         />
                       </td>
                       <td>
                         <Controller
                           name={`homework.assignments.${index}.tasks.1.material`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <textarea {...field} className="table-textarea" />
+                          )}
                         />
                       </td>
                       <td>
                         <Controller
                           name={`homework.assignments.${index}.tasks.1.rangeAndPages`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <textarea {...field} className="table-textarea" />
+                          )}
                         />
                       </td>
                     </tr>
@@ -406,7 +464,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="homework.advice"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -416,7 +476,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="homework.noteForNextSession"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -442,14 +504,14 @@ const RenderSheetDataForm = () => {
                           control={control}
                           render={({ field }) => (
                             <Autocomplete
-                            {...field}
-                            iconProps={{ color: "primary" }}
-                            closeOnSelect={false}
-                            allowFree
-                            emptyMessage="存在しません"
-                            variant="unstyled"
-                            text={12}
-                            items={tests}
+                              {...field}
+                              iconProps={{ color: "primary" }}
+                              closeOnSelect={false}
+                              allowFree
+                              emptyMessage="存在しません"
+                              variant="unstyled"
+                              text={12}
+                              items={tests}
                             />
                           )}
                         />
@@ -458,14 +520,18 @@ const RenderSheetDataForm = () => {
                         <Controller
                           name={`nextTest.${index}.chapter`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <textarea {...field} className="table-textarea" />
+                          )}
                         />
                       </td>
                       <td>
                         <Controller
                           name={`nextTest.${index}.rangeAndPages`}
                           control={control}
-                          render={({ field }) => <textarea {...field} className="table-textarea" />}
+                          render={({ field }) => (
+                            <textarea {...field} className="table-textarea" />
+                          )}
                         />
                       </td>
                     </tr>
@@ -483,7 +549,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="studentStatus"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -500,7 +568,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="lessonPlan.ifTestOK"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -510,7 +580,9 @@ const RenderSheetDataForm = () => {
                       <Controller
                         name="lessonPlan.ifTestNG"
                         control={control}
-                        render={({ field }) => <textarea {...field} className="table-textarea" />}
+                        render={({ field }) => (
+                          <textarea {...field} className="table-textarea" />
+                        )}
                       />
                     </td>
                   </tr>
@@ -528,13 +600,31 @@ const RenderSheetDataForm = () => {
               loadingText="登録後検索画面に戻ります"
               className="post-report"
             >
-              新しい報告書を登録
+              {isEditing ? "報告書を保存" : "新しい報告書を登録"}
             </Button>
+            {isEditing && (
+              <Button
+                variant="ghost"
+                colorScheme="primary"
+                size="md"
+                ml={4}
+                onClick={onCancelEdit}
+              >
+                キャンセル
+              </Button>
+            )}
             <ErrorMessage>
-              <Alert status="error" variant="island-accent" size="xs" mt={0} mb={2} mr={0} ml={0} border="none">
-                <AlertDescription>
-                  登録に失敗しました
-                </AlertDescription>
+              <Alert
+                status="error"
+                variant="island-accent"
+                size="xs"
+                mt={0}
+                mb={2}
+                mr={0}
+                ml={0}
+                border="none"
+              >
+                <AlertDescription>登録に失敗しました</AlertDescription>
               </Alert>
             </ErrorMessage>
           </CardFooter>
