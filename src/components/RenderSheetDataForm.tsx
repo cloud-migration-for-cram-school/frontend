@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface RenderSheetDataFormProps {
-  currentFormData?: SheetData;
+  initialFormData?: SheetData;
   setCurrentFormData: (data: SheetData) => void;
   isEditing: boolean;
   onCancelEdit: () => void;
@@ -16,7 +16,7 @@ interface RenderSheetDataFormProps {
 }
 
 const RenderSheetDataForm = ({
-  currentFormData,
+  initialFormData,
   setCurrentFormData,
   isEditing,
   onCancelEdit,
@@ -24,7 +24,7 @@ const RenderSheetDataForm = ({
   setIsInvalid,
 }: RenderSheetDataFormProps) => {
   const { control, handleSubmit, setValue, getValues } = useForm<SheetData>({
-    defaultValues: currentFormData || {
+    defaultValues: initialFormData || {
       basicInfo: {
         dateAndTime: "",
         subjectName: "",

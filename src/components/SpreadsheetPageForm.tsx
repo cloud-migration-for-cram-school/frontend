@@ -7,8 +7,8 @@ import RenderSheetDataForm from "./RenderSheetDataForm";
 import { Kbd, Alert, AlertDescription } from "@yamada-ui/react";
 
 const SpreadsheetPageForm = () => {
-  const [sheetData1, setSheetData1] = useState<SheetData | undefined>(undefined);
-  const [originalFormData, setOriginalFormData] = useState<SheetData | undefined>(undefined);
+  const [previousSheetData, setPreviousSheetData] = useState<SheetData | undefined>(undefined);
+  const [temporaryFormData, setTemporaryFormData] = useState<SheetData | undefined>(undefined);
   const [currentFormData, setCurrentFormData] = useState<SheetData | undefined>(undefined);
   const [isEditing, setIsEditing] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
@@ -17,26 +17,41 @@ const SpreadsheetPageForm = () => {
 
   useEffect(() => {
     if (sheetData) {
-      setSheetData1(sheetData);
+      setPreviousSheetData(sheetData);
     }
   }, [location, sheetData]);
 
   const handleEdit = (currentFormData: SheetData | undefined) => {
     if (!isEditing && currentFormData) {
-      setOriginalFormData(currentFormData);
-      setCurrentFormData(sheetData1);
+      setTemporaryFormData(currentFormData);
+      //setCurrentFormData(previousSheetData);
     }
     setIsInvalid(false);
     setIsEditing(true);
+    console.log("edit直前previousSheetData:", previousSheetData);
+    console.log("edittemporaryFormData has changed:", temporaryFormData);
+    console.log("editcurrentFormData has changed:", currentFormData);
   };
 
   const handleCancelEdit = () => {
-    if (originalFormData) {
-      setCurrentFormData(originalFormData);
+    if (temporaryFormData) {
+      setCurrentFormData(temporaryFormData);
     }
     setIsInvalid(false);
     setIsEditing(false);
   };
+
+  useEffect(() => {
+    console.log("previousSheetData has changed:", previousSheetData);
+  }, [previousSheetData]);
+
+  useEffect(() => {
+    console.log("temporaryFormData has changed:", temporaryFormData);
+  }, [temporaryFormData]);
+
+  useEffect(() => {
+    console.log("currentFormData has changed:", currentFormData);
+  }, [currentFormData]);
 
   return (
     <div className="spreadsheet-page">
@@ -50,7 +65,7 @@ const SpreadsheetPageForm = () => {
       <div className="spreadsheet-content">
         <div className="spreadsheet-column">
           <RenderSheetDataForm
-            currentFormData={isEditing ? sheetData1 : originalFormData}
+            initialFormData={isEditing ? previousSheetData : temporaryFormData}
             setCurrentFormData={setCurrentFormData}
             isEditing={isEditing}
             onCancelEdit={handleCancelEdit}
@@ -59,10 +74,10 @@ const SpreadsheetPageForm = () => {
           />
         </div>
         <div className="spreadsheet-column">
-          {!isEditing && sheetData1 && (
+          {!isEditing && previousSheetData && (
             <RenderSheetData
-              sheetData={sheetData1}
-              onEdit={() => handleEdit(originalFormData)}
+              sheetData={previousSheetData}
+              onEdit={() => handleEdit(currentFormData)}
               setIsInvalid={setIsInvalid}
             />
           )}
