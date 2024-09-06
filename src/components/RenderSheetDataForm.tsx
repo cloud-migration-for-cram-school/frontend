@@ -8,7 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 interface RenderSheetDataFormProps {
   initialFormData?: SheetData;
-  setCurrentFormData: (data: SheetData) => void;
+  setTemporaryFormData: (data: SheetData) => void;
   isEditing: boolean;
   onCancelEdit: () => void;
   isInvalid: boolean;
@@ -17,15 +17,14 @@ interface RenderSheetDataFormProps {
 
 const RenderSheetDataForm = ({
   initialFormData,
-  setCurrentFormData,
+  setTemporaryFormData,
   isEditing,
   onCancelEdit,
   isInvalid,
   setIsInvalid,
 }: RenderSheetDataFormProps) => {
-  console.log("initial", initialFormData);
   const { control, handleSubmit, reset, setValue, getValues } = useForm<SheetData>({
-    defaultValues: initialFormData || {
+    defaultValues: {
       basicInfo: {
         dateAndTime: "",
         subjectName: "",
@@ -106,13 +105,11 @@ const RenderSheetDataForm = ({
   ];
 
   useEffect(() => {
-    if(initialFormData){
+    if (isEditing) {
+      setTemporaryFormData(getValues());
       reset(initialFormData);
     }else{
-      reset({})
-      console.log("空白にreset");
-    }
-    if (!isEditing) {
+      reset(initialFormData);
       const today = new Date();
       const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
       const formattedDate = `${today.getMonth() + 1}月${today.getDate()}日(${dayNames[today.getDay()]})`;
@@ -144,11 +141,6 @@ const RenderSheetDataForm = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      onChange={() => {
-        if (!isEditing) {
-          setCurrentFormData(getValues());
-        }
-      }}
       className="spreadsheet-column"
     >
       <Card>
