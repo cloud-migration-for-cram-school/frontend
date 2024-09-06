@@ -133,7 +133,7 @@ const RenderSheetDataForm = ({
     setIsInvalid(false);
     if(isEditing){
       try {
-        await axios.post(`http://~:8080/submit/report/old/${sheet_id}/${subjects_id}`, data);
+        await axios.post(`http://localhost:8080/submit/report/old/${sheet_id}/${subjects_id}`, data);
         setPreviousSheetData(getValues());
         setIsEditing(false);
       } catch (error) {
@@ -144,7 +144,7 @@ const RenderSheetDataForm = ({
       }
     }else{
       try {
-        await axios.post(`http://~:8080/submit/report/${sheet_id}/${subjects_id}`, data);
+        await axios.post(`http://localhost:8080/submit/report/${sheet_id}/${subjects_id}`, data);
         navigate("/");
       } catch (error) {
         console.error("エラーが発生しました:", error);
