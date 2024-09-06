@@ -124,7 +124,7 @@ const RenderSheetDataForm = ({
     setIsLoading(true);
     setIsInvalid(false);
     try {
-      await axios.post(`http://~:8080/submit/report/${sheet_id}/${subjects_id}`, data);
+      await axios.post(`http://localhost:8000/submit/report/${sheet_id}/${subjects_id}`, data);
       navigate("/");
     } catch (error) {
       console.error("エラーが発生しました:", error);
