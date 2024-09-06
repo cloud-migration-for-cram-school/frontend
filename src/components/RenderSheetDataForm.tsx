@@ -8,23 +8,27 @@ import { useNavigate, useParams } from "react-router-dom";
 
 interface RenderSheetDataFormProps {
   initialFormData?: SheetData;
-  setCurrentFormData: (data: SheetData) => void;
+  setTemporaryFormData: (data: SheetData) => void;
+  setPreviousSheetData: (data: SheetData) => void;
   isEditing: boolean;
   onCancelEdit: () => void;
   isInvalid: boolean;
   setIsInvalid: (value: boolean) => void;
+  setIsEditing: (value: boolean) => void;
 }
 
 const RenderSheetDataForm = ({
   initialFormData,
-  setCurrentFormData,
+  setTemporaryFormData,
+  setPreviousSheetData,
   isEditing,
   onCancelEdit,
   isInvalid,
   setIsInvalid,
+  setIsEditing
 }: RenderSheetDataFormProps) => {
-  const { control, handleSubmit, setValue, getValues } = useForm<SheetData>({
-    defaultValues: initialFormData || {
+  const { control, handleSubmit, reset, setValue, getValues } = useForm<SheetData>({
+    defaultValues: {
       basicInfo: {
         dateAndTime: "",
         subjectName: "",
@@ -105,7 +109,11 @@ const RenderSheetDataForm = ({
   ];
 
   useEffect(() => {
-    if (!isEditing) {
+    if (isEditing) {
+      setTemporaryFormData(getValues());
+      reset(initialFormData);
+    }else{
+      reset(initialFormData);
       const today = new Date();
       const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
       const formattedDate = `${today.getMonth() + 1}月${today.getDate()}日(${dayNames[today.getDay()]})`;
@@ -118,37 +126,45 @@ const RenderSheetDataForm = ({
         setValue(`homework.assignments.${i}.day`, formattedFutureDate);
       }
     }
-  }, [isEditing, setValue]);
+  }, [isEditing, reset, setValue]);
 
   const onSubmit = async (data: SheetData) => {
     setIsLoading(true);
     setIsInvalid(false);
-    try {
-      await axios.post(`http://localhost:8000/submit/report/${sheet_id}/${subjects_id}`, data);
-      navigate("/");
-    } catch (error) {
-      console.error("エラーが発生しました:", error);
-      setIsInvalid(true);
-    } finally {
-      setIsLoading(false);
+    if(isEditing){
+      try {
+        await axios.post(`http://localhost:8080/submit/report/old/${sheet_id}/${subjects_id}`, data);
+        setPreviousSheetData(getValues());
+        setIsEditing(false);
+      } catch (error) {
+        console.error("エラーが発生しました:", error);
+        setIsInvalid(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }else{
+      try {
+        await axios.post(`http://localhost:8080/submit/report/${sheet_id}/${subjects_id}`, data);
+        navigate("/");
+      } catch (error) {
+        console.error("エラーが発生しました:", error);
+        setIsInvalid(true);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      onChange={() => {
-        if (!isEditing) {
-          setCurrentFormData(getValues());
-        }
-      }}
       className="spreadsheet-column"
     >
       <Card>
         <FormControl isInvalid={isInvalid}>
           <CardHeader>
             <h1 className="report-header">
-              {isEditing ? "報告書を編集" : "新しい報告書"}
+              {isEditing ? "過去の報告書" : "新しい報告書"}
             </h1>
           </CardHeader>
           <CardBody>
@@ -597,10 +613,10 @@ const RenderSheetDataForm = ({
               colorScheme="primary"
               isLoading={isLoading}
               size="md"
-              loadingText="登録後検索画面に戻ります"
+              loadingText="登録中…"
               className="post-report"
             >
-              {isEditing ? "報告書を保存" : "新しい報告書を登録"}
+              {isEditing ? "過去の報告書の編集を登録" : "新しい報告書を登録"}
             </Button>
             {isEditing && (
               <Button
