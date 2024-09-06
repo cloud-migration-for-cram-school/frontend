@@ -23,7 +23,8 @@ const RenderSheetDataForm = ({
   isInvalid,
   setIsInvalid,
 }: RenderSheetDataFormProps) => {
-  const { control, handleSubmit, setValue, getValues } = useForm<SheetData>({
+  console.log("initial", initialFormData);
+  const { control, handleSubmit, reset, setValue, getValues } = useForm<SheetData>({
     defaultValues: initialFormData || {
       basicInfo: {
         dateAndTime: "",
@@ -105,6 +106,12 @@ const RenderSheetDataForm = ({
   ];
 
   useEffect(() => {
+    if(initialFormData){
+      reset(initialFormData);
+    }else{
+      reset({})
+      console.log("空白にreset");
+    }
     if (!isEditing) {
       const today = new Date();
       const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
@@ -118,7 +125,7 @@ const RenderSheetDataForm = ({
         setValue(`homework.assignments.${i}.day`, formattedFutureDate);
       }
     }
-  }, [isEditing, setValue]);
+  }, [isEditing, reset, setValue]);
 
   const onSubmit = async (data: SheetData) => {
     setIsLoading(true);
@@ -148,7 +155,7 @@ const RenderSheetDataForm = ({
         <FormControl isInvalid={isInvalid}>
           <CardHeader>
             <h1 className="report-header">
-              {isEditing ? "報告書を編集" : "新しい報告書"}
+              {isEditing ? "過去の報告書" : "新しい報告書"}
             </h1>
           </CardHeader>
           <CardBody>

@@ -19,26 +19,30 @@ const SpreadsheetPageForm = () => {
     if (sheetData) {
       setPreviousSheetData(sheetData);
     }
+    console.log("初期previousSheetData:", previousSheetData);
+    console.log("初期temporaryFormData:", temporaryFormData);
+    console.log("初期currentFormData:", currentFormData);
   }, [location, sheetData]);
 
-  const handleEdit = (currentFormData: SheetData | undefined) => {
-    if (!isEditing && currentFormData) {
-      setTemporaryFormData(currentFormData);
-      //setCurrentFormData(previousSheetData);
-    }
+  const handleEdit = () => {
+    setTemporaryFormData(currentFormData);//ここをgetValueにする。setTemporaryFormDataを渡してラムダ式でgetValueでセット。
     setIsInvalid(false);
     setIsEditing(true);
     console.log("edit直前previousSheetData:", previousSheetData);
-    console.log("edittemporaryFormData has changed:", temporaryFormData);
-    console.log("editcurrentFormData has changed:", currentFormData);
+    console.log("edit直前temporaryFormData:", temporaryFormData);
+    console.log("edit直前currentFormData:", currentFormData);
   };
 
   const handleCancelEdit = () => {
     if (temporaryFormData) {
+      console.log("handlecancel", temporaryFormData);
       setCurrentFormData(temporaryFormData);
     }
     setIsInvalid(false);
     setIsEditing(false);
+    console.log("edit直後previousSheetData:", previousSheetData);
+    console.log("edit直後temporaryFormData:", temporaryFormData);
+    console.log("edit直後currentFormData:", currentFormData);
   };
 
   useEffect(() => {
@@ -65,6 +69,7 @@ const SpreadsheetPageForm = () => {
       <div className="spreadsheet-content">
         <div className="spreadsheet-column">
           <RenderSheetDataForm
+            //isEditingが変わるとinitialFormDataは随時変更される. initialが変わるたびにフォームにsetvalueする必要がある
             initialFormData={isEditing ? previousSheetData : temporaryFormData}
             setCurrentFormData={setCurrentFormData}
             isEditing={isEditing}
@@ -77,8 +82,7 @@ const SpreadsheetPageForm = () => {
           {!isEditing && previousSheetData && (
             <RenderSheetData
               sheetData={previousSheetData}
-              onEdit={() => handleEdit(currentFormData)}
-              setIsInvalid={setIsInvalid}
+              onEdit={handleEdit}
             />
           )}
         </div>

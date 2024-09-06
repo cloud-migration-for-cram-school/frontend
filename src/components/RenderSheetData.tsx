@@ -4,13 +4,11 @@ import { Button, Card, CardHeader, CardBody } from "@yamada-ui/react";
 interface RenderSheetDataProps {
   sheetData: SheetData;
   onEdit: () => void;
-  setIsInvalid: (value: boolean) => void;
 }
 
 export const RenderSheetData = ({
   sheetData,
   onEdit,
-  setIsInvalid,
 }: RenderSheetDataProps) => (
   <div className="spreadsheet-column">
     <Card>
@@ -22,10 +20,7 @@ export const RenderSheetData = ({
               colorScheme="primary"
               variant="link"
               size={"md"}
-              onClick={() => {
-                setIsInvalid(false);
-                onEdit();
-              }}
+              onClick={onEdit}
             >
               (編集する)
             </Button>
