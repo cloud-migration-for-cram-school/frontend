@@ -1,14 +1,29 @@
 import { SheetData } from "../types/SheetData";
 import { Button, Card, CardHeader, CardBody } from "@yamada-ui/react";
 
-export const RenderSheetData = ({ sheetData }: { sheetData: SheetData }) => (
+interface RenderSheetDataProps {
+  sheetData: SheetData;
+  onEdit: () => void;
+}
+
+export const RenderSheetData = ({
+  sheetData,
+  onEdit,
+}: RenderSheetDataProps) => (
   <div className="spreadsheet-column">
     <Card>
       <CardHeader>
         <h1 className="report-header">
           過去の報告書
           <span className="edit">
-          <Button colorScheme="primary" variant="link" size={"md"}>(編集する)</Button>
+            <Button
+              colorScheme="primary"
+              variant="link"
+              size={"md"}
+              onClick={onEdit}
+            >
+              (編集する)
+            </Button>
           </span>
         </h1>
       </CardHeader>
@@ -87,7 +102,9 @@ export const RenderSheetData = ({ sheetData }: { sheetData: SheetData }) => (
               ))}
               <tr>
                 <th>Strengths and Areas for Improvement</th>
-                <td colSpan={2}>{sheetData.lessonDetails.strengthsAndAreasForImprovement}</td>
+                <td colSpan={2}>
+                  {sheetData.lessonDetails.strengthsAndAreasForImprovement}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -176,3 +193,5 @@ export const RenderSheetData = ({ sheetData }: { sheetData: SheetData }) => (
     </Card>
   </div>
 );
+
+export default RenderSheetData;

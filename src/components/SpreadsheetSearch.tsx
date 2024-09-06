@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { HStack, Autocomplete, FormControl, Button, ErrorMessage, Alert, AlertDescription } from "@yamada-ui/react";
 import { Spreadsheet, Subject, FormData } from "../types/SpreadsheetSearch";
-import dummySheetData from "../assets/dummySheetData";
-import dummySheets from "../assets/dummySheets";
-import dummySubjectsA from "../assets/dummySubjectsA";
+//import dummySheetData from "../assets/dummySheetData";
+//import dummySheets from "../assets/dummySheets";
+//import dummySubjectsA from "../assets/dummySubjectsA";
 import { SheetData } from "../types/SheetData";
 
 const SpreadsheetSearch = () => {
@@ -25,7 +25,7 @@ const SpreadsheetSearch = () => {
     const fetchSheets = async () => {
       try {
         const response = await axios.get<Spreadsheet[]>(
-          "http://~:8080/search"
+          "http://localhost:8000/search"
         );
         setSheets(response.data);
       } catch (error) {
@@ -33,19 +33,19 @@ const SpreadsheetSearch = () => {
       }
     };
     fetchSheets();
-    setSheets(dummySheets);
+    //setSheets(dummySheets);
   }, []);
 
   const fetchSubjectById = async (selectedSheetId: string) => {
     try {
       const response = await axios.get<Subject[]>(
-        `http://~:8080/search/subjects/${selectedSheetId}`
+        `http://localhost:8000/search/subjects/${selectedSheetId}`
       );
       setSubjects(response.data);
     } catch (error) {
       console.error("エラーが発生しました:", error);
     }
-    setSubjects(dummySubjectsA);
+    //setSubjects(dummySubjectsA);
   };
 
   const fetchReportBySubject = async (sheet_id: string, subjects_id: string) => {
@@ -53,7 +53,7 @@ const SpreadsheetSearch = () => {
     setIsInvalid(false);
     try {
       const response = await axios.get<SheetData>(
-        `http://~:8080/search/subjects/reports/${sheet_id}/${subjects_id}`
+        `http://localhost:8000/search/subjects/reports/${sheet_id}/${subjects_id}`
       );
       navigate(`/${sheet_id}/${subjects_id}`, {
         state: { sheetData: response.data },
@@ -63,6 +63,9 @@ const SpreadsheetSearch = () => {
       setIsInvalid(true);
     } finally {
       setIsLoading(false);
+      navigate(`/${sheet_id}/${subjects_id}`, {
+        //state: { sheetData: dummySheetData },
+      });
     }
   };
 
