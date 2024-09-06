@@ -9,19 +9,23 @@ import { useNavigate, useParams } from "react-router-dom";
 interface RenderSheetDataFormProps {
   initialFormData?: SheetData;
   setTemporaryFormData: (data: SheetData) => void;
+  setPreviousSheetData: (data: SheetData) => void;
   isEditing: boolean;
   onCancelEdit: () => void;
   isInvalid: boolean;
   setIsInvalid: (value: boolean) => void;
+  setIsEditing: (value: boolean) => void;
 }
 
 const RenderSheetDataForm = ({
   initialFormData,
   setTemporaryFormData,
+  setPreviousSheetData,
   isEditing,
   onCancelEdit,
   isInvalid,
   setIsInvalid,
+  setIsEditing
 }: RenderSheetDataFormProps) => {
   const { control, handleSubmit, reset, setValue, getValues } = useForm<SheetData>({
     defaultValues: {
@@ -127,14 +131,27 @@ const RenderSheetDataForm = ({
   const onSubmit = async (data: SheetData) => {
     setIsLoading(true);
     setIsInvalid(false);
-    try {
-      await axios.post(`http://~:8080/submit/report/${sheet_id}/${subjects_id}`, data);
-      navigate("/");
-    } catch (error) {
-      console.error("エラーが発生しました:", error);
-      setIsInvalid(true);
-    } finally {
-      setIsLoading(false);
+    if(isEditing){
+      try {
+        await axios.post(`http://~:8080/submit/report/old/${sheet_id}/${subjects_id}`, data);
+        setPreviousSheetData(getValues());
+        setIsEditing(false);
+      } catch (error) {
+        console.error("エラーが発生しました:", error);
+        setIsInvalid(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }else{
+      try {
+        await axios.post(`http://~:8080/submit/report/${sheet_id}/${subjects_id}`, data);
+        navigate("/");
+      } catch (error) {
+        console.error("エラーが発生しました:", error);
+        setIsInvalid(true);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -596,10 +613,10 @@ const RenderSheetDataForm = ({
               colorScheme="primary"
               isLoading={isLoading}
               size="md"
-              loadingText="登録後検索画面に戻ります"
+              loadingText="登録中…"
               className="post-report"
             >
-              {isEditing ? "報告書を保存" : "新しい報告書を登録"}
+              {isEditing ? "過去の報告書の編集を登録" : "新しい報告書を登録"}
             </Button>
             {isEditing && (
               <Button

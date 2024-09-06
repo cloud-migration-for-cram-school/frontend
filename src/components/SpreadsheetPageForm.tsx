@@ -45,10 +45,12 @@ const SpreadsheetPageForm = () => {
             //isEditingが変わるとinitialFormDataは随時変更される. initialが変わるたびにフォームにsetvalueする必要がある
             initialFormData={isEditing ? previousSheetData : temporaryFormData}
             setTemporaryFormData={setTemporaryFormData}
+            setPreviousSheetData={setPreviousSheetData}
             isEditing={isEditing}
             onCancelEdit={handleCancelEdit}
             isInvalid={isInvalid}
             setIsInvalid={setIsInvalid}
+            setIsEditing={setIsEditing}
           />
         </div>
         <div className="spreadsheet-column">
