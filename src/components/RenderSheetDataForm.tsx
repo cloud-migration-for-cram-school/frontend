@@ -127,13 +127,25 @@ const RenderSheetDataForm = ({
     }
   }, [isEditing, reset, setValue]);
   
-
   const onSubmit = async (data: SheetData) => {
     setIsLoading(true);
     setIsInvalid(false);
     if(isEditing){
+      const replaceNullWithEmptyString = (obj: any) => {
+        Object.keys(obj).forEach((key) => {
+          if (obj[key] === null || obj[key] === undefined) {
+            obj[key] = "";
+          } else if (typeof obj[key] === "object") {
+            replaceNullWithEmptyString(obj[key]);
+          }
+        });
+        return obj;
+      };
+
+      const sanitizedData = replaceNullWithEmptyString({ ...data });
+
       try {
-        await axios.post(`http://localhost:8080/submit/report/old/${sheet_id}/${subjects_id}`, data);
+        await axios.post(`http://localhost:8080/submit/report/old/${sheet_id}/${subjects_id}`, sanitizedData);
         setPreviousSheetData(getValues());
         setIsEditing(false);
       } catch (error) {
