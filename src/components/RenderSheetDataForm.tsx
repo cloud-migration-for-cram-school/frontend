@@ -72,7 +72,7 @@ const RenderSheetDataForm = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { sheet_id, subjects_id } = useParams();
+  const { sheetId, subjectsId } = useParams();
 
   const subjects: Subject[] = [
     { label: "英語", value: "英語" },
@@ -148,7 +148,7 @@ const RenderSheetDataForm = ({
       const sanitizedData = replaceNullWithEmptyString({ ...data });
 
       try {
-        await axios.post(`http://localhost:8080/submit/report/old/${sheet_id}/${subjects_id}`, sanitizedData);
+        await axios.post(`http://localhost:8080/submit/report/old/${sheetId}/${subjectsId}`, sanitizedData);
         setPreviousSheetData(getValues());
         setIsEditing(false);
       } catch (error) {
@@ -159,7 +159,7 @@ const RenderSheetDataForm = ({
       }
     }else{
       try {
-        await axios.post(`http://localhost:8080/submit/report/${sheet_id}/${subjects_id}`, data);
+        await axios.post(`http://localhost:8080/submit/report/${sheetId}/${subjectsId}`, data);
         navigate("/");
       } catch (error) {
         console.error("エラーが発生しました:", error);

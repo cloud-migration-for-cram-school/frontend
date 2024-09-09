@@ -48,14 +48,14 @@ const SpreadsheetSearch = () => {
     //setSubjects(dummySubjectsA);
   };
 
-  const fetchReportBySubject = async (sheet_id: string, subjects_id: string) => {
+  const fetchReportBySubject = async (sheetId: string, subjectsId: string) => {
     setIsLoading(true);
     setIsInvalid(false);
     try {
       const response = await axios.get<SheetData>(
-        `http://localhost:8000/search/subjects/reports/${sheet_id}/${subjects_id}`
+        `http://localhost:8000/search/subjects/reports/${sheetId}/${subjectsId}`
       );
-      navigate(`/${sheet_id}/${subjects_id}`, {
+      navigate(`/${sheetId}/${subjectsId}`, {
         state: { sheetData: response.data },
       });
     } catch (error) {
@@ -63,7 +63,7 @@ const SpreadsheetSearch = () => {
       setIsInvalid(true);
     } finally {
       setIsLoading(false);
-      navigate(`/${sheet_id}/${subjects_id}`, {
+      navigate(`/${sheetId}/${subjectsId}`, {
         //state: { sheetData: dummySheetData },
       });
     }
