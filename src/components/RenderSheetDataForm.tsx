@@ -115,19 +115,21 @@ const RenderSheetDataForm = ({
     } else {
       reset(initialFormData);
       const today = new Date();
+      const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
+      
       const formattedDate = `${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')} ${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
       setValue("basicInfo.dateAndTime", formattedDate);
   
       for (let i = 0; i < 6; i++) {
         const futureDate = new Date(today);
         futureDate.setDate(today.getDate() + i + 1);
-        const formattedFutureDate = `${String(futureDate.getMonth() + 1).padStart(2, '0')}/${String(futureDate.getDate()).padStart(2, '0')} ${String(futureDate.getHours()).padStart(2, '0')}:${String(futureDate.getMinutes()).padStart(2, '0')}`;
+  
+        const formattedFutureDate = `${futureDate.getMonth() + 1}月${futureDate.getDate()}日(${dayNames[futureDate.getDay()]})`;
         setValue(`homework.assignments.${i}.day`, formattedFutureDate);
       }
     }
   }, [isEditing, reset, setValue]);
   
-
   const onSubmit = async (data: SheetData) => {
     setIsLoading(true);
     setIsInvalid(false);
