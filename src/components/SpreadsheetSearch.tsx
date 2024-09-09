@@ -5,9 +5,9 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { HStack, Autocomplete, FormControl, Button, ErrorMessage, Alert, AlertDescription } from "@yamada-ui/react";
 import { FormData } from "../types/SpreadsheetSearch";
 import { Spreadsheet, Subject } from "../types/SpreadsheetSearch";
-//import dummySheetData from "../assets/dummySheetData";
-//import dummySheets from "../assets/dummySheets";
-//import dummySubjectsA from "../assets/dummySubjectsA";
+import dummySheetData from "../assets/dummySheetData";
+import dummySheets from "../assets/dummySheets";
+import dummySubjectsA from "../assets/dummySubjectsA";
 import { SheetData } from "../types/SheetData";
 
 interface SpreadsheetSearchProps {
@@ -33,7 +33,7 @@ const SpreadsheetSearch = ({ setSelectedSheetName, setSelectedSubjectName }: Spr
       }
     };
     fetchSheets();
-    //setSheets(dummySheets);
+    setSheets(dummySheets);
   }, []);
 
   const fetchSubjectById = async (selectedSheetId: string) => {
@@ -43,7 +43,7 @@ const SpreadsheetSearch = ({ setSelectedSheetName, setSelectedSubjectName }: Spr
     } catch (error) {
       console.error("エラーが発生しました:", error);
     }
-    //setSubjects(dummySubjectsA);
+    setSubjects(dummySubjectsA);
   };
 
   const fetchReportBySubject = async (sheetId: string, subjectsId: string) => {
@@ -60,7 +60,7 @@ const SpreadsheetSearch = ({ setSelectedSheetName, setSelectedSubjectName }: Spr
     } finally {
       setIsLoading(false);
       navigate(`/${sheetId}/${subjectsId}`, {
-        //state: { sheetData: dummySheetData },
+        state: { sheetData: dummySheetData },
       });
     }
   };

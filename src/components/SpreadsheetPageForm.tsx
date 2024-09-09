@@ -4,7 +4,7 @@ import "../styles/SpreadsheetPage.css";
 import { SheetData } from "../types/SheetData";
 import RenderSheetData from "./RenderSheetData";
 import RenderSheetDataForm from "./RenderSheetDataForm";
-import { Kbd, Alert, AlertDescription } from "@yamada-ui/react";
+import { Kbd, Alert, AlertDescription, VStack } from "@yamada-ui/react";
 
 interface SpreadsheetPageFormProps {
   selectedSheetName: string;
@@ -38,16 +38,18 @@ const SpreadsheetPageForm = ({ selectedSheetName, selectedSubjectName }: Spreads
   return (
     <div className="spreadsheet-page">
       <div className="spreadsheet-header">
-        <Alert variant="island-accent" mt={0} mb={0} mr={720} ml={0}>
-          <AlertDescription>
-            <Kbd>Tab</Kbd>または<Kbd>Shift + Tab</Kbd>で入力セルを移動
-          </AlertDescription>
-        </Alert>
-        <Alert variant="island-accent" mt={0} mb={0} mr={720} ml={0}>
-          <AlertDescription>
-            {selectedSheetName}, {selectedSubjectName}
-          </AlertDescription>
-        </Alert>
+        <VStack>
+          <Alert variant="island-accent" mt={0} mb={0} mr={0} ml={0}>
+            <AlertDescription>
+              <Kbd>Tab</Kbd>または<Kbd>Shift + Tab</Kbd>で入力セルを移動
+            </AlertDescription>
+          </Alert>
+          <Alert variant="island-accent" mt={0} mb={0} mr={0} ml={0}>
+            <AlertDescription>
+              {selectedSheetName}/{selectedSubjectName}
+            </AlertDescription>
+          </Alert>
+        </VStack>
       </div>
       <div className="spreadsheet-content">
         <div className="spreadsheet-column">
