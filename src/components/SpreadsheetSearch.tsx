@@ -3,30 +3,30 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { HStack, Autocomplete, FormControl, Button, ErrorMessage, Alert, AlertDescription } from "@yamada-ui/react";
-import { Spreadsheet, Subject, FormData } from "../types/SpreadsheetSearch";
+import { FormData } from "../types/SpreadsheetSearch";
+import { Spreadsheet, Subject } from "../types/SpreadsheetSearch";
 //import dummySheetData from "../assets/dummySheetData";
 //import dummySheets from "../assets/dummySheets";
 //import dummySubjectsA from "../assets/dummySubjectsA";
 import { SheetData } from "../types/SheetData";
 
-const SpreadsheetSearch = () => {
+interface SpreadsheetSearchProps {
+  setSelectedSheetName: (selectedSheetName: string) => void;
+  setSelectedSubjectName: (selectedSubjectName: string) => void;
+}
+
+const SpreadsheetSearch = ({ setSelectedSheetName, setSelectedSubjectName }: SpreadsheetSearchProps) => {
   const [sheets, setSheets] = useState<Spreadsheet[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
   const navigate = useNavigate();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
+  const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   useEffect(() => {
     const fetchSheets = async () => {
       try {
-        const response = await axios.get<Spreadsheet[]>(
-          "http://localhost:8000/search"
-        );
+        const response = await axios.get<Spreadsheet[]>("http://localhost:8000/search");
         setSheets(response.data);
       } catch (error) {
         console.error("エラーが発生しました:", error);
@@ -38,9 +38,7 @@ const SpreadsheetSearch = () => {
 
   const fetchSubjectById = async (selectedSheetId: string) => {
     try {
-      const response = await axios.get<Subject[]>(
-        `http://localhost:8000/search/subjects/${selectedSheetId}`
-      );
+      const response = await axios.get<Subject[]>(`http://localhost:8000/search/subjects/${selectedSheetId}`);
       setSubjects(response.data);
     } catch (error) {
       console.error("エラーが発生しました:", error);
@@ -52,9 +50,7 @@ const SpreadsheetSearch = () => {
     setIsLoading(true);
     setIsInvalid(false);
     try {
-      const response = await axios.get<SheetData>(
-        `http://localhost:8000/search/subjects/reports/${sheetId}/${subjectsId}`
-      );
+      const response = await axios.get<SheetData>(`http://localhost:8000/search/subjects/reports/${sheetId}/${subjectsId}`);
       navigate(`/${sheetId}/${subjectsId}`, {
         state: { sheetData: response.data },
       });
@@ -81,9 +77,7 @@ const SpreadsheetSearch = () => {
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <HStack>
-          <FormControl
-            isInvalid={!!errors.selectedSheetId}
-          >
+          <FormControl isInvalid={!!errors.selectedSheetId}>
             <Controller
               key={sheets?.length || "initial"}
               name="selectedSheetId"
@@ -100,9 +94,15 @@ const SpreadsheetSearch = () => {
                   variant="flushed"
                   iconProps={{ color: "primary" }}
                   size={"lg"}
-                  onChange={(value) => {
-                    field.onChange(value);
-                    onSelectSpreadsheet(value);
+                  onChange={(value: string) => {
+                    const selectedSheet: Spreadsheet|undefined = sheets.find(sheet => sheet.value === value);
+                    if (selectedSheet) {
+                      field.onChange(selectedSheet.value);
+                      onSelectSpreadsheet(selectedSheet.value);
+                      setSelectedSheetName(selectedSheet.label);
+                    } else {
+                      console.error("スプレッドシートが見つかりませんでした");
+                    }
                   }}
                 />
               )}
@@ -115,9 +115,8 @@ const SpreadsheetSearch = () => {
               </Alert>
             </ErrorMessage>
           </FormControl>
-          <FormControl
-            isInvalid={!!errors.selectedSubjectId}
-          >
+
+          <FormControl isInvalid={!!errors.selectedSubjectId}>
             <Controller
               key={subjects?.length || "initial"}
               name="selectedSubjectId"
@@ -134,13 +133,22 @@ const SpreadsheetSearch = () => {
                   variant="flushed"
                   iconProps={{ color: "primary" }}
                   size={"lg"}
+                  onChange={(value: string) => {
+                    const selectedSubject: Subject|undefined = subjects.find(subject => subject.value === value);
+                    if (selectedSubject) {
+                      field.onChange(selectedSubject.value);
+                      setSelectedSubjectName(selectedSubject.label)
+                    } else {
+                      console.error("科目が見つかりませんでした");
+                    }
+                  }}
                 />
               )}
             />
             <ErrorMessage p="0px" m="0px">
               <Alert status="error" variant="island-accent" size="xs" border="none" position="absolute" top="50px">
                 <AlertDescription>
-                  {errors.selectedSubjectId? errors.selectedSubjectId.message : undefined}
+                  {errors.selectedSubjectId ? errors.selectedSubjectId.message : undefined}
                 </AlertDescription>
               </Alert>
             </ErrorMessage>

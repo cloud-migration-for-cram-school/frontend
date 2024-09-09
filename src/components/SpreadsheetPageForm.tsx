@@ -6,7 +6,12 @@ import RenderSheetData from "./RenderSheetData";
 import RenderSheetDataForm from "./RenderSheetDataForm";
 import { Kbd, Alert, AlertDescription } from "@yamada-ui/react";
 
-const SpreadsheetPageForm = () => {
+interface SpreadsheetPageFormProps {
+  selectedSheetName: string;
+  selectedSubjectName: string;
+}
+
+const SpreadsheetPageForm = ({ selectedSheetName, selectedSubjectName }: SpreadsheetPageFormProps) => {
   const [previousSheetData, setPreviousSheetData] = useState<SheetData | undefined>(undefined);
   const [temporaryFormData, setTemporaryFormData] = useState<SheetData | undefined>(undefined);
   const [isEditing, setIsEditing] = useState(false);
@@ -38,11 +43,16 @@ const SpreadsheetPageForm = () => {
             <Kbd>Tab</Kbd>または<Kbd>Shift + Tab</Kbd>で入力セルを移動
           </AlertDescription>
         </Alert>
+        <Alert variant="island-accent" mt={0} mb={0} mr={720} ml={0}>
+          <AlertDescription>
+            {selectedSheetName}, {selectedSubjectName}
+          </AlertDescription>
+        </Alert>
       </div>
       <div className="spreadsheet-content">
         <div className="spreadsheet-column">
           <RenderSheetDataForm
-            //isEditingが変わるとinitialFormDataは随時変更される. initialが変わるたびにフォームにsetvalueする必要がある
+            //isEditingが変わるとinitialFormDataは随時変更される. initialが変わるたびにフォームにresetする必要がある.
             initialFormData={isEditing ? previousSheetData : temporaryFormData}
             setTemporaryFormData={setTemporaryFormData}
             setPreviousSheetData={setPreviousSheetData}
