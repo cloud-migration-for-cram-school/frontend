@@ -14,6 +14,8 @@ interface RenderSheetDataFormProps {
   onCancelEdit: () => void;
   isInvalid: boolean;
   setIsInvalid: (value: boolean) => void;
+  isEmpty: boolean;
+  setIsEmpty: (value: boolean) => void;
   setIsEditing: (value: boolean) => void;
 }
 
@@ -25,6 +27,8 @@ const RenderSheetDataForm = ({
   onCancelEdit,
   isInvalid,
   setIsInvalid,
+  isEmpty,
+  setIsEmpty,
   setIsEditing
 }: RenderSheetDataFormProps) => {
   const { control, handleSubmit, reset, setValue, getValues } = useForm<SheetData>({
@@ -72,7 +76,7 @@ const RenderSheetDataForm = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { sheetId, subjectsId } = useParams();
+  const { sheetId, subjectId } = useParams();
 
   const subjects: Subject[] = [
     { label: "英語", value: "英語" },
@@ -131,8 +135,30 @@ const RenderSheetDataForm = ({
   }, [isEditing, reset, setValue]);
   
   const onSubmit = async (data: SheetData) => {
+
+    const requiredFields = [
+      data.basicInfo.dateAndTime,
+      data.basicInfo.subjectName,
+      data.basicInfo.teacherName,
+      data.basicInfo.homeworkProgress,
+      data.basicInfo.homeworkAccuracy,
+      data.lessonDetails.strengthsAndAreasForImprovement,
+      data.studentStatus,
+      data.lessonPlan.ifTestOK,
+      data.lessonPlan.ifTestNG,
+    ];
+    
     setIsLoading(true);
+    setIsEmpty(false);
     setIsInvalid(false);
+
+    if (requiredFields.some(field => field === "")) {
+      setIsEmpty(true);
+      setIsInvalid(true);
+      setIsLoading(false);
+      return;
+    }
+
     if(isEditing){
       const replaceNullWithEmptyString = (obj: any) => {
         Object.keys(obj).forEach((key) => {
@@ -148,7 +174,7 @@ const RenderSheetDataForm = ({
       const sanitizedData = replaceNullWithEmptyString({ ...data });
 
       try {
-        await axios.post(`http://localhost:8080/submit/report/old/${sheetId}/${subjectsId}`, sanitizedData);
+        await axios.post(`http://localhost:8080/submit/report/old/${sheetId}/${subjectId}`, sanitizedData);
         setPreviousSheetData(getValues());
         setIsEditing(false);
       } catch (error) {
@@ -159,7 +185,7 @@ const RenderSheetDataForm = ({
       }
     }else{
       try {
-        await axios.post(`http://localhost:8080/submit/report/${sheetId}/${subjectsId}`, data);
+        await axios.post(`http://localhost:8080/submit/report/${sheetId}/${subjectId}`, data);
         navigate("/");
       } catch (error) {
         console.error("エラーが発生しました:", error);
@@ -187,7 +213,7 @@ const RenderSheetDataForm = ({
               <table>
                 <tbody>
                   <tr>
-                    <th>Date and Time</th>
+                    <th>Date and Time<span style={{ color: 'red' }}>*</span></th>
                     <td>
                       <Controller
                         name="basicInfo.dateAndTime"
@@ -197,7 +223,7 @@ const RenderSheetDataForm = ({
                         )}
                       />
                     </td>
-                    <th>Subject Name</th>
+                    <th>Subject Name<span style={{ color: 'red' }}>*</span></th>
                     <td>
                       <Controller
                         name="basicInfo.subjectName"
@@ -216,7 +242,7 @@ const RenderSheetDataForm = ({
                         )}
                       />
                     </td>
-                    <th>Teacher Name</th>
+                    <th>Teacher Name<span style={{ color: 'red' }}>*</span></th>
                     <td>
                       <Controller
                         name="basicInfo.teacherName"
@@ -238,7 +264,7 @@ const RenderSheetDataForm = ({
                         )}
                       />
                     </td>
-                    <th>Homework Progress</th>
+                    <th>Homework Progress<span style={{ color: 'red' }}>*</span></th>
                     <td>
                       <Controller
                         name="basicInfo.homeworkProgress"
@@ -257,7 +283,7 @@ const RenderSheetDataForm = ({
                         )}
                       />
                     </td>
-                    <th>Homework Accuracy</th>
+                    <th>Homework Accuracy<span style={{ color: 'red' }}>*</span></th>
                     <td>
                       <Controller
                         name="basicInfo.homeworkAccuracy"
@@ -413,7 +439,7 @@ const RenderSheetDataForm = ({
                     </tr>
                   ))}
                   <tr>
-                    <th>Strengths and Areas for Improvement</th>
+                    <th>Strengths and Areas for Improvement<span style={{ color: 'red' }}>*</span></th>
                     <td colSpan={2}>
                       <Controller
                         name="lessonDetails.strengthsAndAreasForImprovement"
@@ -575,7 +601,7 @@ const RenderSheetDataForm = ({
               <table>
                 <tbody>
                   <tr>
-                    <th>Status</th>
+                    <th>Status<span style={{ color: 'red' }}>*</span></th>
                     <td>
                       <Controller
                         name="studentStatus"
@@ -594,7 +620,7 @@ const RenderSheetDataForm = ({
               <table>
                 <tbody>
                   <tr>
-                    <th>If Test OK</th>
+                    <th>If Test OK<span style={{ color: 'red' }}>*</span></th>
                     <td>
                       <Controller
                         name="lessonPlan.ifTestOK"
@@ -606,7 +632,7 @@ const RenderSheetDataForm = ({
                     </td>
                   </tr>
                   <tr>
-                    <th>If Test NG</th>
+                    <th>If Test NG<span style={{ color: 'red' }}>*</span></th>
                     <td>
                       <Controller
                         name="lessonPlan.ifTestNG"
@@ -655,7 +681,7 @@ const RenderSheetDataForm = ({
                 ml={0}
                 border="none"
               >
-                <AlertDescription>登録に失敗しました</AlertDescription>
+                <AlertDescription>{isEmpty ? "必要項目(*)を入力してください" : "登録に失敗しました"}</AlertDescription>
               </Alert>
             </ErrorMessage>
           </CardFooter>
