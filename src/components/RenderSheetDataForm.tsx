@@ -232,7 +232,6 @@ const RenderSheetDataForm = ({
                           <Autocomplete
                             {...field}
                             iconProps={{ color: "primary" }}
-                            closeOnSelect={false}
                             allowFree
                             emptyMessage="存在しません"
                             variant="unstyled"
@@ -273,7 +272,6 @@ const RenderSheetDataForm = ({
                           <Autocomplete
                             {...field}
                             iconProps={{ color: "primary" }}
-                            closeOnSelect={false}
                             allowFree
                             emptyMessage="存在しません"
                             variant="unstyled"
@@ -292,7 +290,6 @@ const RenderSheetDataForm = ({
                           <Autocomplete
                             {...field}
                             iconProps={{ color: "primary" }}
-                            closeOnSelect={false}
                             allowFree
                             emptyMessage="存在しません"
                             variant="unstyled"
@@ -351,7 +348,6 @@ const RenderSheetDataForm = ({
                           <Autocomplete
                             {...field}
                             iconProps={{ color: "primary" }}
-                            closeOnSelect={false}
                             allowFree
                             emptyMessage="存在しません"
                             variant="unstyled"
@@ -426,7 +422,6 @@ const RenderSheetDataForm = ({
                             <Autocomplete
                               {...field}
                               iconProps={{ color: "primary" }}
-                              closeOnSelect={false}
                               allowFree
                               emptyMessage="存在しません"
                               variant="unstyled"
@@ -563,7 +558,6 @@ const RenderSheetDataForm = ({
                             <Autocomplete
                               {...field}
                               iconProps={{ color: "primary" }}
-                              closeOnSelect={false}
                               allowFree
                               emptyMessage="存在しません"
                               variant="unstyled"
