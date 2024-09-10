@@ -13,7 +13,7 @@ function App() {
     <UIProvider>
       <Routes>
         <Route path="/" element={<SpreadsheetSearch setSelectedSheetName={setSelectedSheetName} setSelectedSubjectName={setSelectedSubjectName} />} />
-        <Route path="/:sheetId/:subjectsId" element={<SpreadsheetPageForm selectedSheetName={selectedSheetName} selectedSubjectName={selectedSubjectName} />} />
+        <Route path="/:sheetId/:subjectId" element={<SpreadsheetPageForm selectedSheetName={selectedSheetName} selectedSubjectName={selectedSubjectName} />} />
       </Routes>
     </UIProvider>
   );

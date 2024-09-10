@@ -46,12 +46,12 @@ const SpreadsheetSearch = ({ setSelectedSheetName, setSelectedSubjectName }: Spr
     setSubjects(dummySubjectsA);
   };
 
-  const fetchReportBySubject = async (sheetId: string, subjectsId: string) => {
+  const fetchReportBySubject = async (sheetId: string, subjectId: string) => {
     setIsLoading(true);
     setIsInvalid(false);
     try {
-      const response = await axios.get<SheetData>(`http://localhost:8000/search/subjects/reports/${sheetId}/${subjectsId}`);
-      navigate(`/${sheetId}/${subjectsId}`, {
+      const response = await axios.get<SheetData>(`http://localhost:8000/search/subjects/reports/${sheetId}/${subjectId}`);
+      navigate(`/${sheetId}/${subjectId}`, {
         state: { sheetData: response.data },
       });
     } catch (error) {
@@ -59,7 +59,7 @@ const SpreadsheetSearch = ({ setSelectedSheetName, setSelectedSubjectName }: Spr
       setIsInvalid(true);
     } finally {
       setIsLoading(false);
-      navigate(`/${sheetId}/${subjectsId}`, {
+      navigate(`/${sheetId}/${subjectId}`, {
         state: { sheetData: dummySheetData },
       });
     }

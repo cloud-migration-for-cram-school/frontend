@@ -16,6 +16,7 @@ const SpreadsheetPageForm = ({ selectedSheetName, selectedSubjectName }: Spreads
   const [temporaryFormData, setTemporaryFormData] = useState<SheetData | undefined>(undefined);
   const [isEditing, setIsEditing] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
   const location = useLocation();
   const sheetData: SheetData | undefined = location.state?.sheetData;
 
@@ -27,11 +28,13 @@ const SpreadsheetPageForm = ({ selectedSheetName, selectedSubjectName }: Spreads
 
   const handleEdit = () => {
     setIsInvalid(false);
+    setIsEmpty(false);
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
     setIsInvalid(false);
+    setIsEmpty(false);
     setIsEditing(false);
   };
 
@@ -62,6 +65,8 @@ const SpreadsheetPageForm = ({ selectedSheetName, selectedSubjectName }: Spreads
             onCancelEdit={handleCancelEdit}
             isInvalid={isInvalid}
             setIsInvalid={setIsInvalid}
+            isEmpty={isEmpty}
+            setIsEmpty={setIsEmpty}
             setIsEditing={setIsEditing}
           />
         </div>
