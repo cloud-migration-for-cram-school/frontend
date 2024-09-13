@@ -42,14 +42,19 @@ const SpreadsheetPageForm = ({ selectedSheetName, selectedSubjectName }: Spreads
     <div className="spreadsheet-page">
       <div className="spreadsheet-header">
         <VStack>
-          <Alert variant="island-accent" mt={0} mb={0} mr={0} ml={0}>
+          <Alert variant="island-accent" size={"xs"} mt={0} mb={0} mr={0} ml={0}>
             <AlertDescription>
               <Kbd>Tab</Kbd>または<Kbd>Shift + Tab</Kbd>で入力セルを移動
             </AlertDescription>
           </Alert>
-          <Alert variant="island-accent" mt={0} mb={0} mr={0} ml={0}>
+          <Alert variant="island-accent" size={"xs"} mt={0} mb={0} mr={0} ml={0}>
             <AlertDescription>
               {selectedSheetName}/{selectedSubjectName}
+            </AlertDescription>
+          </Alert>
+          <Alert status="error" variant="island-accent" size={"xs"} mt={0} mb={0} mr={0} ml={0}>
+            <AlertDescription>
+            報告書の残りの枚数が{previousSheetData?.spreadsheetInfo.remainingReports}枚です
             </AlertDescription>
           </Alert>
         </VStack>

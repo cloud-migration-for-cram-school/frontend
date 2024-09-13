@@ -1,3 +1,7 @@
+export interface SpreadsheetInfo {
+  remainingReports: string;
+}
+
 export interface BasicInfo {
   dateAndTime: string;
   subjectName: string;
@@ -57,6 +61,7 @@ export interface LessonPlan {
 }
 
 export interface SheetData {
+  spreadsheetInfo: SpreadsheetInfo;
   basicInfo: BasicInfo;
   communication: Communication;
   testReview: TestReview;

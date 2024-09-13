@@ -1,6 +1,9 @@
 import { SheetData } from "../types/SheetData.tsx";
 
 const dummySheetData: SheetData = {
+  spreadsheetInfo: {
+    remainingReports: "3",
+  },
   basicInfo: {
     dateAndTime: "2022-03-15",
     subjectName: "数学",
